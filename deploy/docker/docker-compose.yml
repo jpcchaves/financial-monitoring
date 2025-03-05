@@ -1,7 +1,52 @@
 services:
+
+  kafka:
+    container_name: kafka
+    image: obsidiandynamics/kafka
+    restart: "no"
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - "2181:2181"
+      - "9092:9092"
+    networks:
+      - financial-monitoring-network
+    environment:
+      KAFKA_LISTENERS: "INTERNAL://:29092,EXTERNAL://:9092"
+      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://kafka:29092,EXTERNAL://localhost:9092"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT"
+      KAFKA_INTER_BROKER_LISTENER_NAME: "INTERNAL"
+      KAFKA_ZOOKEEPER_SESSION_TIMEOUT: "6000"
+      KAFKA_RESTART_ATTEMPTS: "10"
+      KAFKA_RESTART_DELAY: "5"
+      ZOOKEEPER_AUTOPURGE_PURGE_INTERVAL: "0"
+    volumes:
+      - ./data/kafka/data:/var/lib/kafka/data
+
+  redpanda-console:
+      container_name: redpanda
+      image: docker.redpanda.com/vectorized/console:latest
+      restart: on-failure
+      entrypoint: /bin/sh
+      command: -c "echo \"$$CONSOLE_CONFIG_FILE\" > /tmp/config.yml; /app/console"
+      ports:
+        - "8081:8080"
+      networks:
+        - financial-monitoring-network
+      environment:
+        CONFIG_FILEPATH: /tmp/config.yml
+        CONSOLE_CONFIG_FILE: |
+          kafka:
+            brokers: ["kafka:29092"]
+      depends_on:
+        - kafka
+
   user-db:
     container_name: user_db
     image: postgres:15
+    restart: always
     ports:
       - "5433:5432"
     environment:
@@ -9,3 +54,47 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: "user_db"
+    networks:
+      - financial-monitoring-network
+
+  transaction-db:
+    container_name: transaction_db
+    image: postgres:15
+    restart: always
+    ports:
+      - "5434:5432"
+    environment:
+      TZ: "America/Sao_Paulo"
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: "transaction_db"
+    networks:
+      - financial-monitoring-network
+
+  fraud-db:
+    container_name: fraud-db
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    networks:
+      - financial-monitoring-network
+
+  notification-db:
+    container_name: notification-db
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27019:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    networks:
+      - financial-monitoring-network
+
+networks:
+  financial-monitoring-network:
+    driver: bridge
