@@ -26,22 +26,22 @@ services:
       - ./data/kafka/data:/var/lib/kafka/data
 
   redpanda-console:
-      container_name: redpanda
-      image: docker.redpanda.com/vectorized/console:latest
-      restart: on-failure
-      entrypoint: /bin/sh
-      command: -c "echo \"$$CONSOLE_CONFIG_FILE\" > /tmp/config.yml; /app/console"
-      ports:
-        - "8081:8080"
-      networks:
-        - financial-monitoring-network
-      environment:
-        CONFIG_FILEPATH: /tmp/config.yml
-        CONSOLE_CONFIG_FILE: |
-          kafka:
-            brokers: ["kafka:29092"]
-      depends_on:
-        - kafka
+    container_name: redpanda
+    image: docker.redpanda.com/vectorized/console:latest
+    restart: on-failure
+    entrypoint: /bin/sh
+    command: -c "echo \"$$CONSOLE_CONFIG_FILE\" > /tmp/config.yml; /app/console"
+    ports:
+      - "8081:8080"
+    networks:
+      - financial-monitoring-network
+    environment:
+      CONFIG_FILEPATH: /tmp/config.yml
+      CONSOLE_CONFIG_FILE: |
+        kafka:
+          brokers: ["kafka:29092"]
+    depends_on:
+      - kafka
 
   user-db:
     container_name: user_db
@@ -51,7 +51,7 @@ services:
       - "5433:5432"
     environment:
       TZ: "America/Sao_Paulo"
-      POSTGRES_USER: admin
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: "user_db"
     networks:
@@ -65,7 +65,7 @@ services:
       - "5434:5432"
     environment:
       TZ: "America/Sao_Paulo"
-      POSTGRES_USER: admin
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: "transaction_db"
     networks:
