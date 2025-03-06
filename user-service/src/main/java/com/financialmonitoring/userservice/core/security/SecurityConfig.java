@@ -1,5 +1,8 @@
 package com.financialmonitoring.userservice.core.security;
 
+import static com.financialmonitoring.userservice.core.security.constants.SecurityConstants.BCRYPT_SALT;
+import static com.financialmonitoring.userservice.core.security.constants.SecurityConstants.PUBLIC_ROUTES;
+
 import com.financialmonitoring.userservice.config.exception.InternalServerErrorException;
 
 import org.slf4j.Logger;
@@ -25,8 +28,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
-
-    private static final int BCRYPT_SALT = 10;
 
     private final AuthenticationFilter authenticationFilter;
     private final AccessDeniedHandler accessDeniedHandler;
@@ -77,7 +78,7 @@ public class SecurityConfig {
                     .authorizeHttpRequests(
                             authorize ->
                                     authorize
-                                            .requestMatchers("/login", "/register")
+                                            .requestMatchers(PUBLIC_ROUTES)
                                             .permitAll()
                                             .anyRequest()
                                             .authenticated())
