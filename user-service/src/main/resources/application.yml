@@ -4,7 +4,7 @@ spring:
 
   datasource:
     url: jdbc:${DB_TYPE:postgresql}://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:user_db}
-    username: ${DB_USERNAME:admin}
+    username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:admin}
     driver-class-name: org.postgresql.Driver
   jpa:
@@ -17,7 +17,11 @@ spring:
 eureka:
   client:
     service-url:
-      default-zone : ${EUREKA_DEFAULT_ZONE_URL:http://localhost:8761/eureka/}
+      default-zone: ${EUREKA_DEFAULT_ZONE_URL:http://localhost:8761/eureka/}
+
+jwt:
+  secret: ${JWT_SECRET:jwt-secret-example-here-fallback-string-to-avoid-exception}
+  expiration-time: ${JWT_EXPIRATION:86400000}
 
 server:
   port: 8090
