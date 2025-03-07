@@ -10,6 +10,10 @@ public class JwtUtils {
     public static String getTokenFromRequest(HttpServletRequest request) {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
+        return extractTokenFromHeader(authHeader);
+    }
+
+    public static String extractTokenFromHeader(String authHeader) {
         if (hasBearerToken(authHeader)) {
             return authHeader.replace(BEARER_PREFIX, "");
         }
