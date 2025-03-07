@@ -12,10 +12,12 @@ public class LoginRequestDTO implements Serializable {
 
     @Serial private static final long serialVersionUID = 7320557890390853832L;
 
-    @Email @NotBlank private String email;
+    @Email(message = "Invalid email!")
+    @NotBlank(message = "Email is a required field!")
+    private String email;
 
-    @NotBlank
-    @Length(min = 6)
+    @NotBlank(message = "Password is a required field!")
+    @Length(min = 6, message = "The password must cointain at least 6 characters!")
     private String password;
 
     public LoginRequestDTO() {}
