@@ -2,15 +2,11 @@ package com.financialmonitoring.userservice.core.security;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.financialmonitoring.userservice.config.exception.BadRequestException;
-import com.financialmonitoring.userservice.core.dto.LoginResponseDTO;
+import com.financialmonitoring.userservice.core.dto.LoginResponseDTO.UserLoginResponseDTO;
 import com.financialmonitoring.userservice.core.model.User;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 
 import org.slf4j.Logger;
@@ -115,8 +111,8 @@ public class TokenProvider {
                 authentication.getAuthorities());
     }
 
-    private LoginResponseDTO getUserClaimValue(User user) {
-        return new LoginResponseDTO(user.getId(), user.getEmail());
+    private UserLoginResponseDTO getUserClaimValue(User user) {
+        return new UserLoginResponseDTO(user.getId(), user.getEmail());
     }
 
     private SecretKey generateKey() {
