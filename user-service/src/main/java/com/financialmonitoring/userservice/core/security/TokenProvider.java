@@ -101,18 +101,9 @@ public class TokenProvider {
         try {
             Jwts.parser().verifyWith(generateKey()).build().parse(token);
             return true;
-        } catch (MalformedJwtException ex) {
-            logger.error("Invalid JWT token: {}", ex.getMessage());
-            throw new BadRequestException("Token inválido!");
-        } catch (ExpiredJwtException ex) {
-            logger.error("Expired JWT token: {}", ex.getMessage());
-            throw new BadRequestException("Token expirado!");
-        } catch (UnsupportedJwtException ex) {
-            logger.error("Invalid JWT format: {}", ex.getMessage());
-            throw new BadRequestException("Formato de token inválido!");
-        } catch (IllegalArgumentException | SecurityException ex) {
-            logger.error("Unexpected error validating token: {}", ex.getMessage());
-            throw new BadRequestException("Ocorreu um ero ao processar sua requisição!");
+        } catch (Exception ex) {
+            logger.error("Invalid token!: {}", ex.getMessage(), ex);
+            return false;
         }
     }
 
