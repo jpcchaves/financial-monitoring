@@ -1,6 +1,6 @@
 package com.financialmonitoring.userservice.core.service.impl;
 
-import com.financialmonitoring.commonlib.utils.JwtUtils;
+import com.financialmonitoring.userservice.core.utils.JwtUtils;
 import com.financialmonitoring.userservice.config.exception.BadRequestException;
 import com.financialmonitoring.userservice.core.dto.LoginRequestDTO;
 import com.financialmonitoring.userservice.core.dto.LoginResponseDTO;
@@ -31,16 +31,19 @@ public class UserServiceImpl implements UserService {
     private final TokenProvider tokenProvider;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtils jwtUtils;
 
     public UserServiceImpl(
             UserRepository userRepository,
             TokenProvider tokenProvider,
             @Lazy AuthenticationManager authenticationManager,
-            @Lazy PasswordEncoder passwordEncoder) {
+            @Lazy PasswordEncoder passwordEncoder,
+            JwtUtils jwtUtils) {
         this.userRepository = userRepository;
         this.tokenProvider = tokenProvider;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtils = jwtUtils;
     }
 
     @Override
@@ -60,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean verifyToken(String authHeader) {
-        return tokenProvider.validateToken(JwtUtils.extractTokenFromHeader(authHeader));
+        return tokenProvider.validateToken(jwtUtils.extractTokenFromHeader(authHeader));
     }
 
     @Override

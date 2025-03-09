@@ -1,6 +1,6 @@
 package com.financialmonitoring.userservice.core.security;
 
-import com.financialmonitoring.commonlib.utils.JwtUtils;
+import com.financialmonitoring.userservice.core.utils.JwtUtils;
 import com.financialmonitoring.userservice.core.service.UserService;
 
 import jakarta.servlet.FilterChain;
@@ -23,17 +23,20 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     private final TokenProvider tokenProvider;
     private final UserService userService;
+    private final JwtUtils jwtUtils;
 
-    public AuthenticationFilter(TokenProvider tokenProvider, UserService userService) {
+    public AuthenticationFilter(
+            TokenProvider tokenProvider, UserService userService, JwtUtils jwtUtils) {
         this.tokenProvider = tokenProvider;
         this.userService = userService;
+        this.jwtUtils = jwtUtils;
     }
 
     @Override
     protected void doFilterInternal(
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         try {
-            String token = JwtUtils.getTokenFromRequest(request);
+            String token = jwtUtils.getTokenFromRequest(request);
 
             if (tokenProvider.isTokenValid(token)) {
                 String tokenSubject = tokenProvider.getTokenSubject(token);
