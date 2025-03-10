@@ -70,6 +70,7 @@ public class JwtAuthGatewayFilter implements GatewayFilter {
                 .onErrorResume(
                         error -> {
                             logger.error("Failed to verify token: {}", error.getMessage(), error);
+                            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                             exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
                             return exchange.getResponse()
