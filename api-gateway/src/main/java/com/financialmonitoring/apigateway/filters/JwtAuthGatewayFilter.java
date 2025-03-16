@@ -47,13 +47,12 @@ public class JwtAuthGatewayFilter extends AbstractGatewayFilterFactory<JwtAuthGa
             if (StringUtils.isBlank(authHeader) || !authHeader.startsWith("Bearer ")) {
                 exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
                 exchange.getResponse().getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+
                 return exchange.getResponse()
-                        .writeWith(
-                                Mono.just(
-                                        exchange.getResponse()
-                                                .bufferFactory()
-                                                .wrap(getUnauthorizedExceptionBytes())
-                                ));
+                        .writeWith(Mono.just(exchange.getResponse()
+                                .bufferFactory()
+                                .wrap(getUnauthorizedExceptionBytes())
+                        ));
             }
 
             return webClientBuilder
@@ -71,12 +70,11 @@ public class JwtAuthGatewayFilter extends AbstractGatewayFilterFactory<JwtAuthGa
                                 exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
                                 return exchange.getResponse()
-                                        .writeWith(
-                                                Mono.just(
-                                                        exchange.getResponse()
-                                                                .bufferFactory()
-                                                                .wrap(getUnauthorizedExceptionBytes())
-                                                ));
+                                        .writeWith(Mono.just(
+                                                exchange.getResponse()
+                                                        .bufferFactory()
+                                                        .wrap(getUnauthorizedExceptionBytes())
+                                        ));
                             });
         };
     }
