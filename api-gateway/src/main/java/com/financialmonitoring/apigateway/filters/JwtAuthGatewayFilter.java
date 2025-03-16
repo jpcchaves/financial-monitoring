@@ -3,6 +3,7 @@ package com.financialmonitoring.apigateway.filters;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financialmonitoring.commonlib.dto.ExceptionResponseDTO;
+import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -24,6 +26,7 @@ public class JwtAuthGatewayFilter extends AbstractGatewayFilterFactory<JwtAuthGa
             .withMessage("Unauthorized!")
             .withDetails("There was a problem authenticating the user.")
             .build();
+    private static final List<String> PUBLIC_ROUTES = List.of("/register", "/login");
 
     private final ObjectMapper objectMapper;
     private final WebClient.Builder webClientBuilder;
@@ -38,8 +41,7 @@ public class JwtAuthGatewayFilter extends AbstractGatewayFilterFactory<JwtAuthGa
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
 
-            if (request.getURI().getPath().contains("/login")
-                    || request.getURI().getPath().contains("/register")) {
+            if (isPublicRoute(exchange)) {
                 return chain.filter(exchange);
             }
 
@@ -87,6 +89,10 @@ public class JwtAuthGatewayFilter extends AbstractGatewayFilterFactory<JwtAuthGa
         }
 
         return new byte[0];
+    }
+
+    private boolean isPublicRoute(ServerWebExchange exchange) {
+        return PUBLIC_ROUTES.stream().anyMatch(route -> exchange.getRequest().getURI().getPath().equals(route));
     }
 
     public static class Config {
