@@ -1,7 +1,6 @@
 package com.financialmonitoring.apigateway.config;
 
 import com.financialmonitoring.apigateway.filters.JwtAuthGatewayFilter;
-
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -29,10 +28,8 @@ public class AuthRouteLocator {
                         "transaction-service",
                         r ->
                                 r.path("/transactions")
-                                        .filters(
-                                                f ->
-                                                        f.prefixPath("/api/v1")
-                                                                .filter(jwtAuthGatewayFilter))
+                                        .filters(f -> f.prefixPath("/api/v1")
+                                                .filter(jwtAuthGatewayFilter.apply(new JwtAuthGatewayFilter.Config())))
                                         .uri("lb://TRANSACTION-SERVICE"))
                 .build();
     }
