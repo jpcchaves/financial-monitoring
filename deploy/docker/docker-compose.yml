@@ -59,15 +59,17 @@ services:
 
   transaction-db:
     container_name: transaction_db
-    image: postgres:15
+    image: mongo:latest
     restart: always
     ports:
-      - "5434:5432"
+      - "27020:27018"
     environment:
-      TZ: "America/Sao_Paulo"
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: "transaction_db"
+      MONGO_INITDB_DATABASE: transaction-db
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGODB_DB: transaction-db
+      MONGODB_USER: admin
+      MONGODB_PASSWORD: admin
     networks:
       - financial-monitoring-network
 
@@ -78,8 +80,12 @@ services:
     ports:
       - "27018:27017"
     environment:
+      MONGO_INITDB_DATABASE: fraud-db
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGODB_DB: fraud-db
+      MONGODB_USER: admin
+      MONGODB_PASSWORD: admin
     networks:
       - financial-monitoring-network
 
