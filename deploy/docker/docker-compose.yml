@@ -62,14 +62,11 @@ services:
     image: mongo:latest
     restart: always
     ports:
-      - "27020:27018"
+      - "27020:27017"
     environment:
-      MONGO_INITDB_DATABASE: transaction-db
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin
-      MONGODB_DB: transaction-db
-      MONGODB_USER: admin
-      MONGODB_PASSWORD: admin
+      MONGO_INITDB_DATABASE: transaction-db
     networks:
       - financial-monitoring-network
 
@@ -83,9 +80,6 @@ services:
       MONGO_INITDB_DATABASE: fraud-db
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin
-      MONGODB_DB: fraud-db
-      MONGODB_USER: admin
-      MONGODB_PASSWORD: admin
     networks:
       - financial-monitoring-network
 
