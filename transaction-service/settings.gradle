@@ -1,0 +1,3 @@
+rootProject.name = 'transaction-service'
+
+include 'common-lib'

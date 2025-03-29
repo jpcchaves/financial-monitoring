@@ -1,0 +1,3 @@
+rootProject.name = 'balance-service'
+
+include 'common-lib'
