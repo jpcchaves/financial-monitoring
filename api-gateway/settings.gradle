@@ -1,3 +1,4 @@
 rootProject.name = 'api-gateway'
 
 include 'common-lib'
+project(":common-lib").projectDir = new File(rootProject.projectDir.parentFile , "/common-lib")
