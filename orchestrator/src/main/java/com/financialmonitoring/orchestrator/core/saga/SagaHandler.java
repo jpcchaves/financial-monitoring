@@ -1,4 +1,4 @@
-package com.financialmonitoring.orchestrator.core;
+package com.financialmonitoring.orchestrator.core.saga;
 
 import static com.financialmonitoring.commonlib.enums.EventSource.*;
 import static com.financialmonitoring.commonlib.enums.SagaStatus.*;
