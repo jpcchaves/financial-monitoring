@@ -1,5 +1,6 @@
 package com.financialmonitoring.commonlib.dto;
 
+import com.financialmonitoring.commonlib.enums.SagaStatus;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ public class EventDTO<T> implements Serializable {
     private String id;
     private String transactionId;
     private String source;
+    private SagaStatus status;
     private T payload;
     private List<HistoryDTO> eventHistory;
     private LocalDateTime createdAt;
@@ -21,6 +23,7 @@ public class EventDTO<T> implements Serializable {
         this.id = builder.id;
         this.transactionId = builder.transactionId;
         this.source = builder.source;
+        this.status = builder.status;
         this.payload = builder.payload;
         this.eventHistory = builder.eventHistory;
         this.createdAt = builder.createdAt;
@@ -54,6 +57,14 @@ public class EventDTO<T> implements Serializable {
         this.source = source;
     }
 
+    public SagaStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(SagaStatus status) {
+        this.status = status;
+    }
+
     public T getPayload() {
         return payload;
     }
@@ -83,6 +94,7 @@ public class EventDTO<T> implements Serializable {
         private String id;
         private String transactionId;
         private String source;
+        private SagaStatus status;
         private T payload;
         private List<HistoryDTO> eventHistory;
         private LocalDateTime createdAt;
@@ -99,6 +111,11 @@ public class EventDTO<T> implements Serializable {
 
         public Builder<T> source(String source) {
             this.source = source;
+            return this;
+        }
+
+        public Builder<T> status(SagaStatus status) {
+            this.status = status;
             return this;
         }
 
