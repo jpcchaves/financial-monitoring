@@ -29,6 +29,17 @@ public class EventDTO<T> implements Serializable {
         this.createdAt = builder.createdAt;
     }
 
+    public EventDTO(String id, String transactionId, String source, SagaStatus status, T payload,
+            List<HistoryDTO> eventHistory, LocalDateTime createdAt) {
+        this.id = id;
+        this.transactionId = transactionId;
+        this.source = source;
+        this.status = status;
+        this.payload = payload;
+        this.eventHistory = eventHistory;
+        this.createdAt = createdAt;
+    }
+
     public static <T> Builder<T> builder() {
         return new Builder<>();
     }
