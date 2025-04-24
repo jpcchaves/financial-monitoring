@@ -35,7 +35,7 @@ public class SagaExecutionController {
 
     private boolean isEventSourceAndStatusValid(EventDTO<?> event, Object[] row) {
         Object source = row[SagaHandler.EVENT_SOURCE_INDEX];
-        Object status = row[SagaHandler.EVENT_SOURCE_INDEX];
+        Object status = row[SagaHandler.SAGA_STATUS_INDEX];
 
         return source.equals(event.getSource()) && status.equals(event.getStatus());
     }
