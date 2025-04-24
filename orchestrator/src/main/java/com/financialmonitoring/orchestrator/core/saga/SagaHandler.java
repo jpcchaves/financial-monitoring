@@ -12,7 +12,7 @@ public class SagaHandler {
 
     public static final Object[][] SAGA_HANDLER = new Object[][] {
             {ORCHESTRATOR, SUCCESS, BALANCE_CHECK_SUCCESS},
-            {ORCHESTRATOR, FAIL, FINISH_SUCCESS},
+            {ORCHESTRATOR, FAIL, FINISH_FAIL},
 
             {BALANCE_SERVICE, SUCCESS, FRAUD_CHECK_SUCCESS},
             {BALANCE_SERVICE, FAIL, FINISH_FAIL},
