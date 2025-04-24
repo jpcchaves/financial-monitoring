@@ -28,7 +28,7 @@ public class SagaExecutionController {
 
     private TransactionSagaTopics findBySourceAndStatus(EventDTO<?> event) {
         return (TransactionSagaTopics) Arrays.stream(SagaHandler.SAGA_HANDLER).filter(row -> isEventSourceAndStatusValid(event, row))
-                .map(i -> i[SagaHandler.TOPIC_INTEX])
+                .map(i -> i[SagaHandler.TOPIC_INDEX])
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Topic not found!"));
     }
