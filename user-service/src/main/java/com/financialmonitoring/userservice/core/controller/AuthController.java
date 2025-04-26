@@ -2,10 +2,10 @@ package com.financialmonitoring.userservice.core.controller;
 
 import com.financialmonitoring.userservice.core.dto.LoginRequestDTO;
 import com.financialmonitoring.userservice.core.dto.LoginResponseDTO;
+import com.financialmonitoring.userservice.core.dto.RegisterRequestDTO;
+import com.financialmonitoring.userservice.core.dto.RegisterResponseDTO;
 import com.financialmonitoring.userservice.core.service.UserService;
-
 import jakarta.validation.Valid;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +28,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO requestDTO) {
         return ResponseEntity.ok(userService.login(requestDTO));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<RegisterResponseDTO> register(@Valid @RequestBody RegisterRequestDTO requestDTO) {
+        return ResponseEntity.ok(userService.register(requestDTO));
     }
 
     @GetMapping("/verify-token")

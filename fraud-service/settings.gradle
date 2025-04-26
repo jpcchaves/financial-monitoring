@@ -1,3 +1,4 @@
 rootProject.name = 'fraud-service'
 
 include 'common-lib'
+project(":common-lib").projectDir = new File(rootProject.projectDir.parentFile , "/common-lib")

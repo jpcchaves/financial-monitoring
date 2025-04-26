@@ -91,6 +91,15 @@ public class User implements UserDetails, Serializable {
     @Column(nullable = false)
     private Boolean isActive;
 
+    public User(Builder builder) {
+        this.id = builder.id;
+        this.firstName = builder.firstName;
+        this.lastName = builder.lastName;
+        this.email = builder.email;
+        this.password = builder.password;
+        this.roles = builder.roles;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles;
@@ -221,5 +230,52 @@ public class User implements UserDetails, Serializable {
                 + email
                 + '\''
                 + '}';
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private Long id;
+        private String firstName;
+        private String lastName;
+        private String email;
+        private String password;
+        private Set<Role> roles;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder firstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public Builder lastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public Builder email(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder password(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public Builder roles(Set<Role> roles) {
+            this.roles = roles;
+            return this;
+        }
+
+        public User build() {
+            return new User(this);
+        }
     }
 }
