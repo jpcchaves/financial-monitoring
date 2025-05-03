@@ -114,6 +114,7 @@ public class UserServiceImpl implements UserService {
                 .firstName(requestDTO.getFirstName())
                 .lastName(requestDTO.getLastName())
                 .roles(Set.of(getDefaultUserRoles()))
+                .active(Boolean.TRUE)
                 .build();
 
         user = userRepository.save(user);

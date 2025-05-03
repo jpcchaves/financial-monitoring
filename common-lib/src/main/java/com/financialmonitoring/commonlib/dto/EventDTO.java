@@ -1,25 +1,26 @@
 package com.financialmonitoring.commonlib.dto;
 
+import com.financialmonitoring.commonlib.enums.EventSource;
 import com.financialmonitoring.commonlib.enums.SagaStatus;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class EventDTO<T> implements Serializable {
+public class EventDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -7389224274356745896L;
     
     private String id;
     private String transactionId;
-    private String source;
+    private EventSource source;
     private SagaStatus status;
-    private T payload;
+    private Object payload;
     private List<HistoryDTO> eventHistory;
     private LocalDateTime createdAt;
 
-    public EventDTO(Builder<T> builder) {
+    public EventDTO(Builder builder) {
         this.id = builder.id;
         this.transactionId = builder.transactionId;
         this.source = builder.source;
@@ -29,8 +30,13 @@ public class EventDTO<T> implements Serializable {
         this.createdAt = builder.createdAt;
     }
 
-    public EventDTO(String id, String transactionId, String source, SagaStatus status, T payload,
-            List<HistoryDTO> eventHistory, LocalDateTime createdAt) {
+    public EventDTO(String id,
+            String transactionId,
+            EventSource source,
+            SagaStatus status,
+            Object payload,
+            List<HistoryDTO> eventHistory,
+            LocalDateTime createdAt) {
         this.id = id;
         this.transactionId = transactionId;
         this.source = source;
@@ -40,8 +46,8 @@ public class EventDTO<T> implements Serializable {
         this.createdAt = createdAt;
     }
 
-    public static <T> Builder<T> builder() {
-        return new Builder<>();
+    public static Builder builder() {
+        return new Builder();
     }
 
     public String getId() {
@@ -60,11 +66,11 @@ public class EventDTO<T> implements Serializable {
         this.transactionId = transactionId;
     }
 
-    public String getSource() {
+    public EventSource getSource() {
         return source;
     }
 
-    public void setSource(String source) {
+    public void setSource(EventSource source) {
         this.source = source;
     }
 
@@ -76,11 +82,11 @@ public class EventDTO<T> implements Serializable {
         this.status = status;
     }
 
-    public T getPayload() {
+    public Object getPayload() {
         return payload;
     }
 
-    public void setPayload(T payload) {
+    public void setPayload(Object payload) {
         this.payload = payload;
     }
 
@@ -100,53 +106,53 @@ public class EventDTO<T> implements Serializable {
         this.createdAt = createdAt;
     }
 
-    public static class Builder<T> {
+    public static class Builder {
 
         private String id;
         private String transactionId;
-        private String source;
+        private EventSource source;
         private SagaStatus status;
-        private T payload;
+        private Object payload;
         private List<HistoryDTO> eventHistory;
         private LocalDateTime createdAt;
 
-        public Builder<T> id(String id) {
+        public Builder id(String id) {
             this.id = id;
             return this;
         }
 
-        public Builder<T> transactionId(String transactionId) {
+        public Builder transactionId(String transactionId) {
             this.transactionId = transactionId;
             return this;
         }
 
-        public Builder<T> source(String source) {
+        public Builder source(EventSource source) {
             this.source = source;
             return this;
         }
 
-        public Builder<T> status(SagaStatus status) {
+        public Builder status(SagaStatus status) {
             this.status = status;
             return this;
         }
 
-        public Builder<T> payload(T payload) {
+        public Builder payload(Object payload) {
             this.payload = payload;
             return this;
         }
 
-        public Builder<T> eventHistory(List<HistoryDTO> eventHistory) {
+        public Builder eventHistory(List<HistoryDTO> eventHistory) {
             this.eventHistory = eventHistory;
             return this;
         }
 
-        public Builder<T> createdAt(LocalDateTime createdAt) {
+        public Builder createdAt(LocalDateTime createdAt) {
             this.createdAt = createdAt;
             return this;
         }
 
-        public EventDTO<T> build() {
-            return new EventDTO<>(this);
+        public EventDTO build() {
+            return new EventDTO(this);
         }
 
     }

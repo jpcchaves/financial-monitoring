@@ -15,12 +15,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -28,6 +22,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(
@@ -45,7 +43,6 @@ public class User implements UserDetails, Serializable {
     @Column(nullable = false, length = 100)
     private String firstName;
 
-    @Column(nullable = false, length = 100)
     private String lastName;
 
     @Column(nullable = false, unique = true)
@@ -98,6 +95,7 @@ public class User implements UserDetails, Serializable {
         this.email = builder.email;
         this.password = builder.password;
         this.roles = builder.roles;
+        this.isActive = builder.isActive;
     }
 
     @Override
@@ -237,12 +235,14 @@ public class User implements UserDetails, Serializable {
     }
 
     public static class Builder {
+
         private Long id;
         private String firstName;
         private String lastName;
         private String email;
         private String password;
         private Set<Role> roles;
+        public Boolean isActive;
 
         public Builder id(Long id) {
             this.id = id;
@@ -271,6 +271,11 @@ public class User implements UserDetails, Serializable {
 
         public Builder roles(Set<Role> roles) {
             this.roles = roles;
+            return this;
+        }
+
+        public Builder active(Boolean isActive) {
+            this.isActive = isActive;
             return this;
         }
 
