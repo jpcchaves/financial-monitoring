@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class EventDTO<T> implements Serializable {
+public class EventDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -7389224274356745896L;
