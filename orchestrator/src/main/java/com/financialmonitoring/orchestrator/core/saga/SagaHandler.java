@@ -13,13 +13,11 @@ public class SagaHandler {
     public static final Object[][] SAGA_HANDLER = new Object[][] {
 
             // SOURCE      STATUS   DESTINATION TOPIC
-
             // ORCHESTRATOR - SUCCESS - DO_BALANCE_CHECK
             {ORCHESTRATOR, SUCCESS, BALANCE_CHECK_SUCCESS},
 
             // ORCHESTRATOR - FAIL - FINISH_FAIL
             {ORCHESTRATOR, FAIL, FINISH_FAIL},
-
 
             // BALANCE_SERVICE - SUCCESS - DO_FRAUD_CHECK
             {BALANCE_SERVICE, SUCCESS, FRAUD_CHECK_SUCCESS},
@@ -40,6 +38,8 @@ public class SagaHandler {
             {FRAUD_SERVICE, ROLLBACK_PENDING, FRAUD_CHECK_FAIL},
 
             // NOTIFICATION_SERVICE - SUCCESS - FINISH_SUCCESS THE SAGA
+            // When it finishes success, it will send the event to the notify-ending topic
+            // mapped in the transaction-service which will be consumed and process the data from the event
             {NOTIFICATION_SERVICE, SUCCESS, FINISH_SUCCESS},
 
             // NOTIFICATION_SERVICE - FAIL - FRAUD_CHECK_FAIL (PREVIOUS TOPIC FAILURE TO UNDO THE PREVIOUS OPERATION)
