@@ -2,6 +2,21 @@ spring:
   application:
     name: FRAUD-SERVICE
 
+  data:
+    mongodb:
+      database: transaction-db
+      uri: ${MONGO_URI:mongodb://admin:admin@localhost:27018}
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    topic:
+      orchestrator: orchestrator
+      fraud-check-success: fraud-check-success
+      fraud-check-fail: fraud-check-fail
+    consumer:
+      group-id: fraud-group
+      auto-offset-reset: latest
+
 eureka:
   client:
     service-url:

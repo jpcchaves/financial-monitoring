@@ -17,7 +17,7 @@ spring:
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     consumer:
-      group-id: transaction-group
+      group-id: user-group
       auto-offset-reset: latest
 
 eureka:
