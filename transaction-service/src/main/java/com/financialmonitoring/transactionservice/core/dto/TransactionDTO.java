@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Positive;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class TransactionRequestDTO implements Serializable {
+public class TransactionDTO implements Serializable {
     @NotBlank(message = "User ID cannot be blank")
     private String userId;
 
@@ -23,9 +23,9 @@ public class TransactionRequestDTO implements Serializable {
     @NotNull(message = "Transaction type cannot be null")
     private TransactionType transactionType;
 
-    public TransactionRequestDTO() {}
+    public TransactionDTO() {}
 
-    public TransactionRequestDTO(String userId, String receiverId, BigDecimal amount, String description, TransactionType transactionType) {
+    public TransactionDTO(String userId, String receiverId, BigDecimal amount, String description, TransactionType transactionType) {
         this.userId = userId;
         this.receiverId = receiverId;
         this.amount = amount;
