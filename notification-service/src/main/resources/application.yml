@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: NOTIFICATION-SERVICE
+
+  data:
+    mongodb:
+      database: transaction-db
+      uri: ${MONGO_URI:mongodb://admin:admin@localhost:27019}
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    topic:
+      orchestrator: orchestrator
+      notification-success: notification-success
+      notification-fail: notification-fail
+    consumer:
+      group-id: notify-group
+      auto-offset-reset: latest

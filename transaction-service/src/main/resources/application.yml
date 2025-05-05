@@ -7,6 +7,14 @@ spring:
       database: transaction-db
       uri: ${MONGO_URI:mongodb://admin:admin@localhost:27020}
 
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    topic:
+      start-transaction-saga: start-transaction-saga
+      notify-ending: notify-ending
+    consumer:
+      group-id: transaction-group
+      auto-offset-reset: latest
 
 eureka:
   client:

@@ -15,6 +15,17 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    topic:
+      orchestrator: orchestrator
+      balance-check-success: balance-check-success
+      balance-check-fail: balance-check-fail
+
+    consumer:
+      group-id: balance-group
+      auto-offset-reset: latest
+
 eureka:
   client:
     service-url:
