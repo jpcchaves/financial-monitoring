@@ -1,8 +1,17 @@
 package com.financialmonitoring.orchestrator.core.saga;
 
-import static com.financialmonitoring.commonlib.enums.EventSource.*;
-import static com.financialmonitoring.commonlib.enums.SagaStatus.*;
-import static com.financialmonitoring.commonlib.enums.TransactionSagaTopics.*;
+import static com.financialmonitoring.commonlib.enums.EventSource.BALANCE_SERVICE;
+import static com.financialmonitoring.commonlib.enums.EventSource.FRAUD_SERVICE;
+import static com.financialmonitoring.commonlib.enums.EventSource.ORCHESTRATOR;
+import static com.financialmonitoring.commonlib.enums.SagaStatus.FAIL;
+import static com.financialmonitoring.commonlib.enums.SagaStatus.ROLLBACK_PENDING;
+import static com.financialmonitoring.commonlib.enums.SagaStatus.SUCCESS;
+import static com.financialmonitoring.commonlib.enums.TransactionSagaTopics.BALANCE_CHECK_FAIL;
+import static com.financialmonitoring.commonlib.enums.TransactionSagaTopics.BALANCE_CHECK_SUCCESS;
+import static com.financialmonitoring.commonlib.enums.TransactionSagaTopics.FINISH_FAIL;
+import static com.financialmonitoring.commonlib.enums.TransactionSagaTopics.FINISH_SUCCESS;
+import static com.financialmonitoring.commonlib.enums.TransactionSagaTopics.FRAUD_CHECK_FAIL;
+import static com.financialmonitoring.commonlib.enums.TransactionSagaTopics.FRAUD_CHECK_SUCCESS;
 
 public class SagaHandler {
 
@@ -29,25 +38,13 @@ public class SagaHandler {
             {BALANCE_SERVICE, ROLLBACK_PENDING, BALANCE_CHECK_FAIL},
 
             // FRAUD_SERVICE - SUCCESS - DO_NOTIFICATION_SEND
-            {FRAUD_SERVICE, SUCCESS, NOTIFICATION_SUCCESS},
+            {FRAUD_SERVICE, SUCCESS, FINISH_SUCCESS},
 
             // FRAUD_SERVICE - FAIL - BALANCE_CHECK_FAIL (PREVIOUS TOPIC FAILURE TO UNDO THE PREVIOUS OPERATION)
             {FRAUD_SERVICE, FAIL, BALANCE_CHECK_FAIL},
 
             // FRAUD_SERVICE - ROLLBACK_PENDING - FRAUD_CHECK_FAIL (TO ROLL BACK THE FRAUD_CHECK OPERATION)
-            {FRAUD_SERVICE, ROLLBACK_PENDING, FRAUD_CHECK_FAIL},
-
-            // NOTIFICATION_SERVICE - SUCCESS - FINISH_SUCCESS THE SAGA
-            // When it finishes success, it will send the event to the notify-ending topic
-            // mapped in the transaction-service which will be consumed and process the data from the event
-            {NOTIFICATION_SERVICE, SUCCESS, FINISH_SUCCESS},
-
-            // NOTIFICATION_SERVICE - FAIL - FRAUD_CHECK_FAIL (PREVIOUS TOPIC FAILURE TO UNDO THE PREVIOUS OPERATION)
-            {NOTIFICATION_SERVICE, FAIL, FRAUD_CHECK_FAIL},
-
-            // NOTIFICATION_SERVICE - ROLLBACK_PENDING - NOTIFICATION_FAIL (TO ROLL BACK THE NOTIFICATION OPERATION)
-            {NOTIFICATION_SERVICE, ROLLBACK_PENDING, NOTIFICATION_FAIL},
-
+            {FRAUD_SERVICE, ROLLBACK_PENDING, FRAUD_CHECK_FAIL}
     };
 
     public static final int EVENT_SOURCE_INDEX = 0;
