@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: ORCHESTRATOR
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    topic:
+      start-transaction-saga: start-transaction-saga
+      finish-success: finish-success
+      finish-fail: finish-fail
+      orchestrator: orchestrator
+    consumer:
+      group-id: orchestrator-group
+      auto-offset-reset: latest
+
+logging:
+  level:
+    org:
+      apache:
+        kafka: OFF
