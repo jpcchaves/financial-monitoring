@@ -44,6 +44,20 @@ public class Event implements Serializable {
         this.createdAt = createdAt;
     }
 
+    private Event(Builder builder) {
+        this.id = builder.id;
+        this.transactionId = builder.transactionId;
+        this.source = builder.source;
+        this.sagaStatus = builder.sagaStatus;
+        this.payload = builder.payload;
+        this.eventHistory = builder.eventHistory;
+        this.createdAt = builder.createdAt;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public String getId() {
         return id;
     }
@@ -125,5 +139,54 @@ public class Event implements Serializable {
                 ", eventHistory=" + eventHistory +
                 ", createdAt=" + createdAt +
                 '}';
+    }
+
+    public static class Builder {
+        private String id;
+        private String transactionId;
+        private String source;
+        private SagaStatus sagaStatus;
+        private Object payload;
+        private List<HistoryDTO> eventHistory;
+        private LocalDateTime createdAt;
+
+        public Builder id(String id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder transactionId(String transactionId) {
+            this.transactionId = transactionId;
+            return this;
+        }
+
+        public Builder source(String source) {
+            this.source = source;
+            return this;
+        }
+
+        public Builder status(SagaStatus sagaStatus) {
+            this.sagaStatus = sagaStatus;
+            return this;
+        }
+
+        public Builder payload(Object payload) {
+            this.payload = payload;
+            return this;
+        }
+
+        public Builder history(List<HistoryDTO> eventHistory) {
+            this.eventHistory = eventHistory;
+            return this;
+        }
+
+        public Builder createdAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public Event build() {
+            return new Event(this);
+        }
     }
 }

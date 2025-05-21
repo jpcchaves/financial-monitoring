@@ -1,6 +1,8 @@
 package com.financialmonitoring.transactionservice.core.service;
 
+import com.financialmonitoring.commonlib.enums.SagaStatus;
 import com.financialmonitoring.transactionservice.core.dto.TransactionDTO;
+import com.financialmonitoring.transactionservice.core.model.Event;
 import com.financialmonitoring.transactionservice.core.model.Transaction;
 import com.financialmonitoring.transactionservice.core.producer.KafkaProducer;
 import com.financialmonitoring.transactionservice.core.repository.TransactionRepository;
@@ -36,9 +38,17 @@ public class TransactionService {
         Transaction transaction = mapper.map(requestDTO, Transaction.class);
         transaction.setTransactionEventId(generateTransactionEventId());
         transaction.setCreatedAt(LocalDateTime.now());
-        kafkaProducer.sendEvent(jsonUtils.toJson(transaction));
         transaction = transactionRepository.save(transaction);
+        kafkaProducer.sendEvent(jsonUtils.toJson(mapEvent(transaction)));
         return mapper.map(transaction, TransactionDTO.class);
+    }
+
+    private Event mapEvent(Transaction transaction) {
+        return Event.builder()
+                .id(UUID.randomUUID().toString())
+                .transactionId(transaction.getTransactionEventId())
+                .payload(jsonUtils.toJson(transaction))
+                .build();
     }
 
     private String generateTransactionEventId() {
