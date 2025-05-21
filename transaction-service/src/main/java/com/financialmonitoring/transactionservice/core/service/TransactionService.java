@@ -45,7 +45,6 @@ public class TransactionService {
 
     private Event mapEvent(Transaction transaction) {
         return Event.builder()
-                .id(UUID.randomUUID().toString())
                 .transactionId(transaction.getTransactionEventId())
                 .payload(jsonUtils.toJson(transaction))
                 .build();
