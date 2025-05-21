@@ -5,6 +5,7 @@ import com.financialmonitoring.commonlib.enums.SagaStatus;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EventDTO implements Serializable {
@@ -44,6 +45,13 @@ public class EventDTO implements Serializable {
         this.payload = payload;
         this.eventHistory = eventHistory;
         this.createdAt = createdAt;
+    }
+
+    public void addToHistory(HistoryDTO history) {
+        if (eventHistory == null || eventHistory.isEmpty()) {
+            eventHistory = new ArrayList<>();
+        }
+        eventHistory.add(history);
     }
 
     public static Builder builder() {
