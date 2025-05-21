@@ -1,6 +1,5 @@
 package com.financialmonitoring.transactionservice.core.service;
 
-import com.financialmonitoring.commonlib.enums.SagaStatus;
 import com.financialmonitoring.transactionservice.core.dto.TransactionDTO;
 import com.financialmonitoring.transactionservice.core.model.Event;
 import com.financialmonitoring.transactionservice.core.model.Transaction;
@@ -47,6 +46,7 @@ public class TransactionService {
         return Event.builder()
                 .transactionId(transaction.getTransactionEventId())
                 .payload(jsonUtils.toJson(transaction))
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 
