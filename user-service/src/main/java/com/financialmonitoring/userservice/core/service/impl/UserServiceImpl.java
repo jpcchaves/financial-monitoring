@@ -76,13 +76,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public LoginResponseDTO login(LoginRequestDTO requestDTO) {
         try {
-            User user =
-                    userRepository
-                            .findByEmail(requestDTO.getEmail())
-                            .orElseThrow(() ->
-                                    new BadRequestException(
-                                            "User not found with the given email: "
-                                                    + requestDTO.getEmail()));
+            User user = getUserByEmail(requestDTO.getEmail());
 
             if (!passwordEncoder.matches(requestDTO.getPassword(), user.getPassword())) {
                 throw new BadRequestException("Invalid password");
