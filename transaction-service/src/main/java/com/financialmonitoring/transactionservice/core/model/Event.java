@@ -21,27 +21,11 @@ public class Event implements Serializable {
     private String transactionId;
     private String source;
     private SagaStatus sagaStatus;
-    private Object payload;
+    private String payload;
     private List<HistoryDTO> eventHistory;
     private LocalDateTime createdAt;
 
     public Event() {
-    }
-
-    public Event(String id,
-            String transactionId,
-            String source,
-            SagaStatus sagaStatus,
-            Object payload,
-            List<HistoryDTO> eventHistory,
-            LocalDateTime createdAt) {
-        this.id = id;
-        this.transactionId = transactionId;
-        this.source = source;
-        this.sagaStatus = sagaStatus;
-        this.payload = payload;
-        this.eventHistory = eventHistory;
-        this.createdAt = createdAt;
     }
 
     private Event(Builder builder) {
@@ -90,11 +74,11 @@ public class Event implements Serializable {
         this.sagaStatus = sagaStatus;
     }
 
-    public Object getPayload() {
+    public String getPayload() {
         return payload;
     }
 
-    public void setPayload(Object payload) {
+    public void setPayload(String payload) {
         this.payload = payload;
     }
 
@@ -146,7 +130,7 @@ public class Event implements Serializable {
         private String transactionId;
         private String source;
         private SagaStatus sagaStatus;
-        private Object payload;
+        private String payload;
         private List<HistoryDTO> eventHistory;
         private LocalDateTime createdAt;
 
@@ -170,7 +154,7 @@ public class Event implements Serializable {
             return this;
         }
 
-        public Builder payload(Object payload) {
+        public Builder payload(String payload) {
             this.payload = payload;
             return this;
         }

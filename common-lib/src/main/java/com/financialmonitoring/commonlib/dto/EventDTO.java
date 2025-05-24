@@ -21,6 +21,9 @@ public class EventDTO implements Serializable {
     private List<HistoryDTO> eventHistory;
     private LocalDateTime createdAt;
 
+    public EventDTO() {
+    }
+
     public EventDTO(Builder builder) {
         this.id = builder.id;
         this.transactionId = builder.transactionId;
