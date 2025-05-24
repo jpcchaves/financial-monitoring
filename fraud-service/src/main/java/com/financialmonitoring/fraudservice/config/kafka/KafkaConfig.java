@@ -43,11 +43,11 @@ public class KafkaConfig {
     @Value("${spring.kafka.topic.orchestrator}")
     private String orchestratorTopic;
 
-    @Value("${spring.kafka.topic.balance-check-success}")
-    private String balanceCheckSuccessTopic;
+    @Value("${spring.kafka.topic.fraud-check-success}")
+    private String fraudCheckSuccessTopic;
 
-    @Value("${spring.kafka.topic.balance-check-fail}")
-    private String balanceCheckFailTopic;
+    @Value("${spring.kafka.topic.fraud-check-fail}")
+    private String fraudCheckFailTopic;
 
     private final ApplicationContext applicationContext;
 
@@ -77,8 +77,8 @@ public class KafkaConfig {
 
         List<String> topics = List.of(
                 orchestratorTopic,
-                balanceCheckSuccessTopic,
-                balanceCheckFailTopic);
+                fraudCheckSuccessTopic,
+                fraudCheckFailTopic);
 
         return topics.stream()
                 .map(topic -> createAndRegisterTopic(topic, registry))
