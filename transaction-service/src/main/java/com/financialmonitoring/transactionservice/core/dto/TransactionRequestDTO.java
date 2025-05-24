@@ -4,10 +4,15 @@ import com.financialmonitoring.commonlib.enums.TransactionType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class TransactionDTO implements Serializable {
+public class TransactionRequestDTO implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 3366598129423135657L;
+
     @NotBlank(message = "User ID cannot be blank")
     private String userId;
 
@@ -23,15 +28,7 @@ public class TransactionDTO implements Serializable {
     @NotNull(message = "Transaction type cannot be null")
     private TransactionType transactionType;
 
-    public TransactionDTO() {}
-
-    public TransactionDTO(String userId, String receiverId, BigDecimal amount, String description, TransactionType transactionType) {
-        this.userId = userId;
-        this.receiverId = receiverId;
-        this.amount = amount;
-        this.description = description;
-        this.transactionType = transactionType;
-    }
+    public TransactionRequestDTO() {}
 
     public String getUserId() {
         return userId;

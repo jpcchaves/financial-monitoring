@@ -1,6 +1,6 @@
 package com.financialmonitoring.transactionservice.core.controller;
 
-import com.financialmonitoring.transactionservice.core.dto.TransactionDTO;
+import com.financialmonitoring.transactionservice.core.dto.TransactionRequestDTO;
 import com.financialmonitoring.transactionservice.core.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<TransactionDTO> transfer(@Valid @RequestBody TransactionDTO requestBody) {
+    public ResponseEntity<TransactionRequestDTO> transfer(@Valid @RequestBody TransactionRequestDTO requestBody) {
         return ResponseEntity.ok(transactionService.doTransfer(requestBody));
     }
 }

@@ -1,6 +1,6 @@
 package com.financialmonitoring.transactionservice.core.service;
 
-import com.financialmonitoring.transactionservice.core.dto.TransactionDTO;
+import com.financialmonitoring.transactionservice.core.dto.TransactionRequestDTO;
 import com.financialmonitoring.transactionservice.core.model.Event;
 import com.financialmonitoring.transactionservice.core.model.Transaction;
 import com.financialmonitoring.transactionservice.core.producer.KafkaProducer;
@@ -33,13 +33,13 @@ public class TransactionService {
         this.jsonUtils = jsonUtils;
     }
 
-    public TransactionDTO doTransfer(TransactionDTO requestDTO) {
+    public TransactionRequestDTO doTransfer(TransactionRequestDTO requestDTO) {
         Transaction transaction = mapper.map(requestDTO, Transaction.class);
         transaction.setTransactionEventId(generateTransactionEventId());
         transaction.setCreatedAt(LocalDateTime.now());
         transaction = transactionRepository.save(transaction);
         kafkaProducer.sendEvent(jsonUtils.toJson(mapEvent(transaction)));
-        return mapper.map(transaction, TransactionDTO.class);
+        return mapper.map(transaction, TransactionRequestDTO.class);
     }
 
     private Event mapEvent(Transaction transaction) {
