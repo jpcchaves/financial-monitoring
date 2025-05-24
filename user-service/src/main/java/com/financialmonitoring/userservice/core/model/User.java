@@ -88,6 +88,8 @@ public class User implements UserDetails, Serializable {
     @Column(nullable = false)
     private Boolean isActive;
 
+    public User() {}
+
     public User(Builder builder) {
         this.id = builder.id;
         this.firstName = builder.firstName;
