@@ -26,7 +26,7 @@ public class BalanceCheckLog {
     private UUID id;
 
     @Column(nullable = false, unique = true, length = 100)
-    private String transactionId;
+    private String eventId;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST,
             CascadeType.REFRESH}, optional = false, targetEntity = Balance.class)
@@ -59,12 +59,12 @@ public class BalanceCheckLog {
         return this;
     }
 
-    public String getTransactionId() {
-        return transactionId;
+    public String getEventId() {
+        return eventId;
     }
 
-    public BalanceCheckLog setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
+    public BalanceCheckLog setEventId(String eventId) {
+        this.eventId = eventId;
         return this;
     }
 

@@ -54,6 +54,6 @@ public class SagaExecutionController {
     }
 
     private String createSagaId(EventDTO event) {
-        return String.format(SAGA_LOG, event.getTransactionId(), event.getId());
+        return String.format(SAGA_LOG, event.getEventId(), event.getId());
     }
 }

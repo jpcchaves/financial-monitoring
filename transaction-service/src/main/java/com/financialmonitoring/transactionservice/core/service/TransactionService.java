@@ -44,7 +44,7 @@ public class TransactionService {
 
     private Event mapEvent(Transaction transaction) {
         return Event.builder()
-                .transactionId(transaction.getTransactionEventId())
+                .eventId(transaction.getTransactionEventId())
                 .payload(jsonUtils.toJson(transaction))
                 .createdAt(LocalDateTime.now())
                 .build();

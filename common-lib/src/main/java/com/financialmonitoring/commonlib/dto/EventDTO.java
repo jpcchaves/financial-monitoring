@@ -14,7 +14,7 @@ public class EventDTO implements Serializable {
     private static final long serialVersionUID = -7389224274356745896L;
     
     private String id;
-    private String transactionId;
+    private String eventId;
     private EventSource source;
     private SagaStatus status;
     private Object payload;
@@ -26,7 +26,7 @@ public class EventDTO implements Serializable {
 
     public EventDTO(Builder builder) {
         this.id = builder.id;
-        this.transactionId = builder.transactionId;
+        this.eventId = builder.eventId;
         this.source = builder.source;
         this.status = builder.status;
         this.payload = builder.payload;
@@ -35,14 +35,14 @@ public class EventDTO implements Serializable {
     }
 
     public EventDTO(String id,
-            String transactionId,
+            String eventId,
             EventSource source,
             SagaStatus status,
             Object payload,
             List<HistoryDTO> eventHistory,
             LocalDateTime createdAt) {
         this.id = id;
-        this.transactionId = transactionId;
+        this.eventId = eventId;
         this.source = source;
         this.status = status;
         this.payload = payload;
@@ -69,12 +69,12 @@ public class EventDTO implements Serializable {
         this.id = id;
     }
 
-    public String getTransactionId() {
-        return transactionId;
+    public String getEventId() {
+        return eventId;
     }
 
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
     }
 
     public EventSource getSource() {
@@ -120,7 +120,7 @@ public class EventDTO implements Serializable {
     public static class Builder {
 
         private String id;
-        private String transactionId;
+        private String eventId;
         private EventSource source;
         private SagaStatus status;
         private Object payload;
@@ -132,8 +132,8 @@ public class EventDTO implements Serializable {
             return this;
         }
 
-        public Builder transactionId(String transactionId) {
-            this.transactionId = transactionId;
+        public Builder eventId(String eventId) {
+            this.eventId = eventId;
             return this;
         }
 

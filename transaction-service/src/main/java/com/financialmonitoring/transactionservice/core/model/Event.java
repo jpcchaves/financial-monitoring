@@ -18,7 +18,7 @@ public class Event implements Serializable {
 
     @Id
     private String id;
-    private String transactionId;
+    private String eventId;
     private String source;
     private SagaStatus sagaStatus;
     private String payload;
@@ -30,7 +30,7 @@ public class Event implements Serializable {
 
     private Event(Builder builder) {
         this.id = builder.id;
-        this.transactionId = builder.transactionId;
+        this.eventId = builder.eventId;
         this.source = builder.source;
         this.sagaStatus = builder.sagaStatus;
         this.payload = builder.payload;
@@ -50,12 +50,12 @@ public class Event implements Serializable {
         this.id = id;
     }
 
-    public String getTransactionId() {
-        return transactionId;
+    public String getEventId() {
+        return eventId;
     }
 
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
     }
 
     public String getSource() {
@@ -104,19 +104,19 @@ public class Event implements Serializable {
             return false;
         }
         Event event = (Event) o;
-        return Objects.equals(id, event.id) && Objects.equals(transactionId, event.transactionId);
+        return Objects.equals(id, event.id) && Objects.equals(eventId, event.eventId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, transactionId);
+        return Objects.hash(id, eventId);
     }
 
     @Override
     public String toString() {
         return "Event{" +
                 "id='" + id + '\'' +
-                ", transactionId='" + transactionId + '\'' +
+                ", eventId='" + eventId + '\'' +
                 ", source='" + source + '\'' +
                 ", sagaStatus=" + sagaStatus +
                 ", payload=" + payload +
@@ -127,7 +127,7 @@ public class Event implements Serializable {
 
     public static class Builder {
         private String id;
-        private String transactionId;
+        private String eventId;
         private String source;
         private SagaStatus sagaStatus;
         private String payload;
@@ -139,8 +139,8 @@ public class Event implements Serializable {
             return this;
         }
 
-        public Builder transactionId(String transactionId) {
-            this.transactionId = transactionId;
+        public Builder eventId(String eventId) {
+            this.eventId = eventId;
             return this;
         }
 
