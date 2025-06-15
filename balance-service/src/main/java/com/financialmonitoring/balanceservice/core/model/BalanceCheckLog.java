@@ -28,6 +28,9 @@ public class BalanceCheckLog {
     @Column(nullable = false, unique = true, length = 100)
     private String eventId;
 
+    @Column(nullable = false, unique = true, length = 100)
+    private String transactionId;
+
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST,
             CascadeType.REFRESH}, optional = false, targetEntity = Balance.class)
     @JoinColumn(name = "balance_id", nullable = false, foreignKey = @ForeignKey(name = "balance_fk", value = ConstraintMode.CONSTRAINT))
@@ -50,75 +53,75 @@ public class BalanceCheckLog {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    public BigDecimal getPreviousValue() {
+        return previousValue;
+    }
+
+    public void setPreviousValue(BigDecimal previousValue) {
+        this.previousValue = previousValue;
+    }
+
     public UUID getId() {
         return id;
     }
 
-    public BalanceCheckLog setId(UUID id) {
+    public void setId(UUID id) {
         this.id = id;
-        return this;
     }
 
     public String getEventId() {
         return eventId;
     }
 
-    public BalanceCheckLog setEventId(String eventId) {
+    public void setEventId(String eventId) {
         this.eventId = eventId;
-        return this;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
     }
 
     public Balance getBalance() {
         return balance;
     }
 
-    public BalanceCheckLog setBalance(Balance balance) {
+    public void setBalance(Balance balance) {
         this.balance = balance;
-        return this;
     }
 
     public BigDecimal getTransactionValue() {
         return transactionValue;
     }
 
-    public BalanceCheckLog setTransactionValue(BigDecimal transactionValue) {
+    public void setTransactionValue(BigDecimal transactionValue) {
         this.transactionValue = transactionValue;
-        return this;
-    }
-
-    public BigDecimal getPreviousValue() {
-        return previousValue;
-    }
-
-    public BalanceCheckLog setPreviousValue(BigDecimal previousValue) {
-        this.previousValue = previousValue;
-        return this;
     }
 
     public BigDecimal getUpdatedValue() {
         return updatedValue;
     }
 
-    public BalanceCheckLog setUpdatedValue(BigDecimal updatedValue) {
+    public void setUpdatedValue(BigDecimal updatedValue) {
         this.updatedValue = updatedValue;
-        return this;
     }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public BalanceCheckLog setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
-        return this;
     }
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public BalanceCheckLog setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-        return this;
     }
 }
