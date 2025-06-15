@@ -12,9 +12,10 @@ public class EventDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -7389224274356745896L;
-    
+
     private String id;
     private String eventId;
+    private String transactionId;
     private EventSource source;
     private SagaStatus status;
     private Object payload;
@@ -27,6 +28,7 @@ public class EventDTO implements Serializable {
     public EventDTO(Builder builder) {
         this.id = builder.id;
         this.eventId = builder.eventId;
+        this.transactionId = builder.transactionId;
         this.source = builder.source;
         this.status = builder.status;
         this.payload = builder.payload;
@@ -50,15 +52,15 @@ public class EventDTO implements Serializable {
         this.createdAt = createdAt;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public void addToHistory(HistoryDTO history) {
         if (eventHistory == null || eventHistory.isEmpty()) {
             eventHistory = new ArrayList<>();
         }
         eventHistory.add(history);
-    }
-
-    public static Builder builder() {
-        return new Builder();
     }
 
     public String getId() {
@@ -75,6 +77,15 @@ public class EventDTO implements Serializable {
 
     public void setEventId(String eventId) {
         this.eventId = eventId;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public EventDTO setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+        return this;
     }
 
     public EventSource getSource() {
@@ -121,6 +132,7 @@ public class EventDTO implements Serializable {
 
         private String id;
         private String eventId;
+        private String transactionId;
         private EventSource source;
         private SagaStatus status;
         private Object payload;
@@ -134,6 +146,11 @@ public class EventDTO implements Serializable {
 
         public Builder eventId(String eventId) {
             this.eventId = eventId;
+            return this;
+        }
+
+        public Builder transactionId(String transactionId) {
+            this.transactionId = transactionId;
             return this;
         }
 

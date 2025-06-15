@@ -19,6 +19,7 @@ public class Event implements Serializable {
     @Id
     private String id;
     private String eventId;
+    private String transactionId;
     private String source;
     private SagaStatus sagaStatus;
     private String payload;
@@ -31,6 +32,7 @@ public class Event implements Serializable {
     private Event(Builder builder) {
         this.id = builder.id;
         this.eventId = builder.eventId;
+        this.transactionId = builder.transactionId;
         this.source = builder.source;
         this.sagaStatus = builder.sagaStatus;
         this.payload = builder.payload;
@@ -56,6 +58,15 @@ public class Event implements Serializable {
 
     public void setEventId(String eventId) {
         this.eventId = eventId;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public Event setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+        return this;
     }
 
     public String getSource() {
@@ -114,20 +125,16 @@ public class Event implements Serializable {
 
     @Override
     public String toString() {
-        return "Event{" +
-                "id='" + id + '\'' +
-                ", eventId='" + eventId + '\'' +
-                ", source='" + source + '\'' +
-                ", sagaStatus=" + sagaStatus +
-                ", payload=" + payload +
-                ", eventHistory=" + eventHistory +
-                ", createdAt=" + createdAt +
-                '}';
+        return "Event{" + "id='" + id + '\'' + ", eventId='" + eventId + '\'' + ", source='" + source + '\''
+                + ", sagaStatus=" + sagaStatus + ", payload=" + payload + ", eventHistory=" + eventHistory
+                + ", createdAt=" + createdAt + '}';
     }
 
     public static class Builder {
+
         private String id;
         private String eventId;
+        private String transactionId;
         private String source;
         private SagaStatus sagaStatus;
         private String payload;
@@ -141,6 +148,11 @@ public class Event implements Serializable {
 
         public Builder eventId(String eventId) {
             this.eventId = eventId;
+            return this;
+        }
+
+        public Builder transactionId(String transactionId) {
+            this.transactionId = transactionId;
             return this;
         }
 
