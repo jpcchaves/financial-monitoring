@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class TransactionService {
+
     private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
 
     private final TransactionRepository transactionRepository;
@@ -36,7 +37,10 @@ public class TransactionService {
     public TransactionRequestDTO doTransfer(TransactionRequestDTO requestDTO) {
         Transaction transaction = mapper.map(requestDTO, Transaction.class);
         transaction.setTransactionEventId(generateTransactionEventId());
-        transaction.setCreatedAt(LocalDateTime.now());
+        transaction.setReceiverId(requestDTO.getReceiverId());
+        transaction.setAmount(requestDTO.getAmount());
+        transaction.setTransactionType(requestDTO.getTransactionType());
+        transaction.setUserId(requestDTO.getUserId());
         transaction = transactionRepository.save(transaction);
         kafkaProducer.sendEvent(jsonUtils.toJson(mapEvent(transaction)));
         return mapper.map(transaction, TransactionRequestDTO.class);
@@ -45,6 +49,7 @@ public class TransactionService {
     private Event mapEvent(Transaction transaction) {
         return Event.builder()
                 .eventId(transaction.getTransactionEventId())
+                .transactionId(transaction.getId())
                 .payload(jsonUtils.toJson(transaction))
                 .createdAt(LocalDateTime.now())
                 .build();
