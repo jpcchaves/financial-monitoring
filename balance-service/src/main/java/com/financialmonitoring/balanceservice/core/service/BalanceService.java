@@ -127,21 +127,29 @@ public class BalanceService {
     }
 
     public void rollbackBalance(EventDTO event) {
-        event.setStatus(SagaStatus.FAIL);
-        event.setSource(EventSource.BALANCE_SERVICE);
+        try {
+            event.setStatus(SagaStatus.FAIL);
+            event.setSource(EventSource.BALANCE_SERVICE);
 
-        TransactionDTO transactionDto = (TransactionDTO) event.getPayload();
-        Balance balance = balanceRepository.findBySenderId(transactionDto.getUserId()).orElseThrow(
-                () -> new ResourceNotFoundException("There was an unexpected error trying to find user's balance"));
+            TransactionDTO transactionDto = (TransactionDTO) event.getPayload();
+            Balance balance = balanceRepository.findBySenderId(transactionDto.getUserId()).orElseThrow(
+                    () -> new ResourceNotFoundException("There was an unexpected error trying to find user's balance"));
 
-        logRepository.findByEventIdAndTransactionId(event.getEventId(),
-                        event.getTransactionId())
-                .ifPresentOrElse(log -> {
-                            balance.setAmount(log.getPreviousValue());
-                            balanceRepository.save(balance);
-                        },
-                        () -> logger.error(
-                                "There was an unexpected error trying to find the balance log of this transaction: {} from this event: {}",
-                                event.getTransactionId(), event.getEventId()));
+            BalanceCheckLog log = logRepository.findByEventIdAndTransactionId(event.getEventId(),
+                            event.getTransactionId())
+                    .orElseThrow(() -> new ResourceNotFoundException(String.format(
+                            "There was an unexpected error trying to find the balance log of this transaction: %s from this event: %s",
+                            event.getTransactionId(), event.getEventId())));
+
+            balance.setAmount(log.getPreviousValue());
+            balanceRepository.save(balance);
+
+            addHistory(event, "Balance rolled back successfully!");
+        } catch (Exception ex) {
+            logger.error("");
+            addHistory(event, "Rollback not executed for balance: ".concat(ex.getMessage()));
+        }
+
+        kafkaProducer.sendEvent(jsonUtils.toJson(event));
     }
 }
