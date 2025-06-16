@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BalanceCheckLogRepository extends JpaRepository<BalanceCheckLog, UUID> {
-
+    boolean existsByEventIdAndTransactionId(String eventId, String transactionId);
 }
