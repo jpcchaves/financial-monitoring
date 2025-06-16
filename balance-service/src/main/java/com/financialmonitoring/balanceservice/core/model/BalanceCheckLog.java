@@ -18,7 +18,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
-@Table(name = "BALANCE_CHECK_LOG_TB")
+@Table(name = "TB_BALANCE_CHECK_LOG")
 public class BalanceCheckLog {
 
     @Id
@@ -52,6 +52,23 @@ public class BalanceCheckLog {
     @UpdateTimestamp
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    public BalanceCheckLog(Builder builder) {
+        this.id = builder.id;
+        this.eventId = builder.eventId;
+        this.transactionId = builder.transactionId;
+        this.balance = builder.balance;
+        this.transactionValue = builder.transactionValue;
+        this.previousValue = builder.previousValue;
+        this.updatedValue = builder.updatedValue;
+    }
+
+    public BalanceCheckLog() {
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
 
     public BigDecimal getPreviousValue() {
         return previousValue;
@@ -123,5 +140,55 @@ public class BalanceCheckLog {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public static class Builder {
+
+        private UUID id;
+        private String eventId;
+        private String transactionId;
+        private Balance balance;
+        private BigDecimal transactionValue;
+        private BigDecimal previousValue;
+        private BigDecimal updatedValue;
+
+        public Builder id(UUID id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder eventId(String eventId) {
+            this.eventId = eventId;
+            return this;
+        }
+
+        public Builder transactionId(String transactionId) {
+            this.transactionId = transactionId;
+            return this;
+        }
+
+        public Builder balance(Balance balance) {
+            this.balance = balance;
+            return this;
+        }
+
+        public Builder transactionValue(BigDecimal transactionValue) {
+            this.transactionValue = transactionValue;
+            return this;
+        }
+
+        public Builder previousValue(BigDecimal previousValue) {
+            this.previousValue = previousValue;
+            return this;
+        }
+
+        public Builder updatedValue(BigDecimal updatedValue) {
+            this.updatedValue = updatedValue;
+            return this;
+        }
+
+        public BalanceCheckLog build() {
+            return new BalanceCheckLog(this);
+        }
     }
 }
