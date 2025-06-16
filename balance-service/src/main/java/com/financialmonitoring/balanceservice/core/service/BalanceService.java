@@ -11,6 +11,7 @@ import com.financialmonitoring.commonlib.dto.HistoryDTO;
 import com.financialmonitoring.commonlib.dto.TransactionDTO;
 import com.financialmonitoring.commonlib.enums.EventSource;
 import com.financialmonitoring.commonlib.enums.SagaStatus;
+import com.financialmonitoring.commonlib.exceptions.ResourceNotFoundException;
 import com.financialmonitoring.commonlib.exceptions.ValidationException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -96,6 +97,8 @@ public class BalanceService {
         if (updatedValue.doubleValue() <= BigDecimal.ZERO.doubleValue()) {
             throw new ValidationException("You cannot perform this transaction because you don't have enough balance!");
         }
+
+        balanceRepository.save(balance);
     }
 
     private void handleSuccess(EventDTO eventDTO) {
@@ -127,6 +130,18 @@ public class BalanceService {
         event.setStatus(SagaStatus.FAIL);
         event.setSource(EventSource.BALANCE_SERVICE);
 
-        // TODO: revert balance update
+        TransactionDTO transactionDto = (TransactionDTO) event.getPayload();
+        Balance balance = balanceRepository.findBySenderId(transactionDto.getUserId()).orElseThrow(
+                () -> new ResourceNotFoundException("There was an unexpected error trying to find user's balance"));
+
+        logRepository.findByEventIdAndTransactionId(event.getEventId(),
+                        event.getTransactionId())
+                .ifPresentOrElse(log -> {
+                            balance.setAmount(log.getPreviousValue());
+                            balanceRepository.save(balance);
+                        },
+                        () -> logger.error(
+                                "There was an unexpected error trying to find the balance log of this transaction: {} from this event: {}",
+                                event.getTransactionId(), event.getEventId()));
     }
 }
