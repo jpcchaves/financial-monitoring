@@ -19,21 +19,25 @@ public class Balance {
     private UUID id;
 
     @Column(nullable = false, updatable = false, unique = true)
-    private Long userId;
+    private String userId;
 
     @Column(columnDefinition = "NUMERIC(19,4)")
     private BigDecimal amount;
 
     private String currency;
 
+    public Balance(Builder builder) {
+        this.id = builder.id;
+        this.userId = builder.userId;
+        this.amount = builder.amount;
+        this.currency = builder.currency;
+    }
+
     public Balance() {
     }
 
-    public Balance(UUID id, Long userId, BigDecimal amount, String currency) {
-        this.id = id;
-        this.userId = userId;
-        this.amount = amount;
-        this.currency = currency;
+    public static Builder builder() {
+        return new Builder();
     }
 
     public UUID getId() {
@@ -44,11 +48,11 @@ public class Balance {
         this.id = id;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -90,5 +94,37 @@ public class Balance {
                 ", amount=" + amount +
                 ", currency='" + currency + '\'' +
                 '}';
+    }
+
+    public static class Builder {
+
+        private UUID id;
+        private String userId;
+        private BigDecimal amount;
+        private String currency;
+
+        public Builder id(UUID id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder userId(String userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public Builder amount(BigDecimal amount) {
+            this.amount = amount;
+            return this;
+        }
+
+        public Builder currency(String currency) {
+            this.currency = currency;
+            return this;
+        }
+
+        public Balance build() {
+            return new Balance(this);
+        }
     }
 }

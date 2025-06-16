@@ -21,7 +21,7 @@ def stop_and_remove_containers():
 def build_application(appName):
   threads.append(appName)
   print(f"Building application {appName}")
-  os.system(f"cd {appName} && ../gradlew clean build -x test")
+  os.system(f"cd {appName} && ./gradlew clean build -x test")
   print(f"Application {appName} finished building!")
   threads.remove(appName)
 
@@ -32,7 +32,7 @@ def build_all_applications():
 def build_module(moduleName):
   modules_threads.append(moduleName)
   print(f"Building module {moduleName}")
-  os.system(f"cd {moduleName} && ../gradlew clean build -x test")
+  os.system(f"cd {moduleName} && ./gradlew clean build -x test")
   print(f"Module {moduleName} finished building!")
   modules_threads.remove(moduleName)
 

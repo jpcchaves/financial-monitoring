@@ -5,14 +5,16 @@ import com.financialmonitoring.commonlib.enums.SagaStatus;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EventDTO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -7389224274356745896L;
-    
+
     private String id;
+    private String eventId;
     private String transactionId;
     private EventSource source;
     private SagaStatus status;
@@ -20,8 +22,12 @@ public class EventDTO implements Serializable {
     private List<HistoryDTO> eventHistory;
     private LocalDateTime createdAt;
 
+    public EventDTO() {
+    }
+
     public EventDTO(Builder builder) {
         this.id = builder.id;
+        this.eventId = builder.eventId;
         this.transactionId = builder.transactionId;
         this.source = builder.source;
         this.status = builder.status;
@@ -31,14 +37,14 @@ public class EventDTO implements Serializable {
     }
 
     public EventDTO(String id,
-            String transactionId,
+            String eventId,
             EventSource source,
             SagaStatus status,
             Object payload,
             List<HistoryDTO> eventHistory,
             LocalDateTime createdAt) {
         this.id = id;
-        this.transactionId = transactionId;
+        this.eventId = eventId;
         this.source = source;
         this.status = status;
         this.payload = payload;
@@ -50,6 +56,13 @@ public class EventDTO implements Serializable {
         return new Builder();
     }
 
+    public void addToHistory(HistoryDTO history) {
+        if (eventHistory == null || eventHistory.isEmpty()) {
+            eventHistory = new ArrayList<>();
+        }
+        eventHistory.add(history);
+    }
+
     public String getId() {
         return id;
     }
@@ -58,12 +71,21 @@ public class EventDTO implements Serializable {
         this.id = id;
     }
 
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
+
     public String getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(String transactionId) {
+    public EventDTO setTransactionId(String transactionId) {
         this.transactionId = transactionId;
+        return this;
     }
 
     public EventSource getSource() {
@@ -109,6 +131,7 @@ public class EventDTO implements Serializable {
     public static class Builder {
 
         private String id;
+        private String eventId;
         private String transactionId;
         private EventSource source;
         private SagaStatus status;
@@ -118,6 +141,11 @@ public class EventDTO implements Serializable {
 
         public Builder id(String id) {
             this.id = id;
+            return this;
+        }
+
+        public Builder eventId(String eventId) {
+            this.eventId = eventId;
             return this;
         }
 

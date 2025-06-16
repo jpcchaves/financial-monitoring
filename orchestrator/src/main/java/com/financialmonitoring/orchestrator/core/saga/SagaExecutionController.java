@@ -16,7 +16,7 @@ public class SagaExecutionController {
     public SagaExecutionController() {
     }
 
-    public TransactionSagaTopics getNextTopic(EventDTO<?> event) {
+    public TransactionSagaTopics getNextTopic(EventDTO event) {
         if (ObjectUtils.isEmpty(event.getSource()) || ObjectUtils.isEmpty(event.getStatus())) {
             throw new IllegalArgumentException("Event source or status cannot be empty");
         }
@@ -26,21 +26,21 @@ public class SagaExecutionController {
         return topic;
     }
 
-    private TransactionSagaTopics findBySourceAndStatus(EventDTO<?> event) {
+    private TransactionSagaTopics findBySourceAndStatus(EventDTO event) {
         return (TransactionSagaTopics) Arrays.stream(SagaHandler.SAGA_HANDLER).filter(row -> isEventSourceAndStatusValid(event, row))
                 .map(i -> i[SagaHandler.TOPIC_INDEX])
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Topic not found!"));
     }
 
-    private boolean isEventSourceAndStatusValid(EventDTO<?> event, Object[] row) {
+    private boolean isEventSourceAndStatusValid(EventDTO event, Object[] row) {
         Object source = row[SagaHandler.EVENT_SOURCE_INDEX];
         Object status = row[SagaHandler.SAGA_STATUS_INDEX];
 
         return source.equals(event.getSource()) && status.equals(event.getStatus());
     }
 
-    private void logCurrentSaga(EventDTO<?> event, TransactionSagaTopics topic) {
+    private void logCurrentSaga(EventDTO event, TransactionSagaTopics topic) {
         var sagaId = createSagaId(event);
         var source = event.getSource();
         switch (event.getStatus()) {
@@ -53,7 +53,7 @@ public class SagaExecutionController {
         }
     }
 
-    private String createSagaId(EventDTO<?> event) {
-        return String.format(SAGA_LOG, event.getTransactionId(), event.getId());
+    private String createSagaId(EventDTO event) {
+        return String.format(SAGA_LOG, event.getEventId(), event.getId());
     }
 }

@@ -28,24 +28,6 @@ public class Transaction implements Serializable {
     public Transaction() {
     }
 
-    public Transaction(String id,
-            String userId,
-            String receiverId,
-            String transactionEventId,
-            BigDecimal amount,
-            String description,
-            TransactionType transactionType,
-            LocalDateTime createdAt) {
-        this.id = id;
-        this.userId = userId;
-        this.receiverId = receiverId;
-        this.transactionEventId = transactionEventId;
-        this.amount = amount;
-        this.description = description;
-        this.transactionType = transactionType;
-        this.createdAt = createdAt;
-    }
-
     public Transaction(Builder builder) {
         this.id = builder.id;
         this.userId = builder.userId;

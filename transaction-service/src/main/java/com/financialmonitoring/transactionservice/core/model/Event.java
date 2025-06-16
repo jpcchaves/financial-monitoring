@@ -18,30 +18,30 @@ public class Event implements Serializable {
 
     @Id
     private String id;
+    private String eventId;
     private String transactionId;
     private String source;
     private SagaStatus sagaStatus;
-    private Object payload;
+    private String payload;
     private List<HistoryDTO> eventHistory;
     private LocalDateTime createdAt;
 
     public Event() {
     }
 
-    public Event(String id,
-            String transactionId,
-            String source,
-            SagaStatus sagaStatus,
-            Object payload,
-            List<HistoryDTO> eventHistory,
-            LocalDateTime createdAt) {
-        this.id = id;
-        this.transactionId = transactionId;
-        this.source = source;
-        this.sagaStatus = sagaStatus;
-        this.payload = payload;
-        this.eventHistory = eventHistory;
-        this.createdAt = createdAt;
+    private Event(Builder builder) {
+        this.id = builder.id;
+        this.eventId = builder.eventId;
+        this.transactionId = builder.transactionId;
+        this.source = builder.source;
+        this.sagaStatus = builder.sagaStatus;
+        this.payload = builder.payload;
+        this.eventHistory = builder.eventHistory;
+        this.createdAt = builder.createdAt;
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public String getId() {
@@ -52,12 +52,21 @@ public class Event implements Serializable {
         this.id = id;
     }
 
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
+
     public String getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(String transactionId) {
+    public Event setTransactionId(String transactionId) {
         this.transactionId = transactionId;
+        return this;
     }
 
     public String getSource() {
@@ -76,11 +85,11 @@ public class Event implements Serializable {
         this.sagaStatus = sagaStatus;
     }
 
-    public Object getPayload() {
+    public String getPayload() {
         return payload;
     }
 
-    public void setPayload(Object payload) {
+    public void setPayload(String payload) {
         this.payload = payload;
     }
 
@@ -106,24 +115,74 @@ public class Event implements Serializable {
             return false;
         }
         Event event = (Event) o;
-        return Objects.equals(id, event.id) && Objects.equals(transactionId, event.transactionId);
+        return Objects.equals(id, event.id) && Objects.equals(eventId, event.eventId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, transactionId);
+        return Objects.hash(id, eventId);
     }
 
     @Override
     public String toString() {
-        return "Event{" +
-                "id='" + id + '\'' +
-                ", transactionId='" + transactionId + '\'' +
-                ", source='" + source + '\'' +
-                ", sagaStatus=" + sagaStatus +
-                ", payload=" + payload +
-                ", eventHistory=" + eventHistory +
-                ", createdAt=" + createdAt +
-                '}';
+        return "Event{" + "id='" + id + '\'' + ", eventId='" + eventId + '\'' + ", source='" + source + '\''
+                + ", sagaStatus=" + sagaStatus + ", payload=" + payload + ", eventHistory=" + eventHistory
+                + ", createdAt=" + createdAt + '}';
+    }
+
+    public static class Builder {
+
+        private String id;
+        private String eventId;
+        private String transactionId;
+        private String source;
+        private SagaStatus sagaStatus;
+        private String payload;
+        private List<HistoryDTO> eventHistory;
+        private LocalDateTime createdAt;
+
+        public Builder id(String id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder eventId(String eventId) {
+            this.eventId = eventId;
+            return this;
+        }
+
+        public Builder transactionId(String transactionId) {
+            this.transactionId = transactionId;
+            return this;
+        }
+
+        public Builder source(String source) {
+            this.source = source;
+            return this;
+        }
+
+        public Builder status(SagaStatus sagaStatus) {
+            this.sagaStatus = sagaStatus;
+            return this;
+        }
+
+        public Builder payload(String payload) {
+            this.payload = payload;
+            return this;
+        }
+
+        public Builder history(List<HistoryDTO> eventHistory) {
+            this.eventHistory = eventHistory;
+            return this;
+        }
+
+        public Builder createdAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public Event build() {
+            return new Event(this);
+        }
     }
 }

@@ -3,7 +3,7 @@ spring:
     name: BALANCE-SERVICE
 
   datasource:
-    url: ${BALANCE_SERVICE_DB_URL:jdbc:postgresql://localhost:5434}
+    url: ${BALANCE_SERVICE_DB_URL:jdbc:postgresql://localhost:5434/balance_db}
     username: ${BALANCE_SERVICE_DB_USERNAME:postgres}
     password: ${BALANCE_SERVICE_DB_PASSWORD:admin}
     driver-class-name: org.postgresql.Driver

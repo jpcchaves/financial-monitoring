@@ -1,5 +1,7 @@
 package com.financialmonitoring.commonlib.dto;
 
+import com.financialmonitoring.commonlib.enums.EventSource;
+import com.financialmonitoring.commonlib.enums.SagaStatus;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -9,12 +11,14 @@ public class HistoryDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1926593896827655282L;
 
-    private String source;
+    private EventSource source;
+    private SagaStatus status;
     private String message;
     private LocalDateTime createdAt;
 
     public HistoryDTO(Builder builder) {
         this.source = builder.source;
+        this.status = builder.status;
         this.message = builder.message;
         this.createdAt = builder.createdAt;
     }
@@ -23,12 +27,20 @@ public class HistoryDTO implements Serializable {
         return new Builder();
     }
 
-    public String getSource() {
+    public EventSource getSource() {
         return source;
     }
 
-    public void setSource(String source) {
+    public void setSource(EventSource source) {
         this.source = source;
+    }
+
+    public SagaStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(SagaStatus status) {
+        this.status = status;
     }
 
     public String getMessage() {
@@ -49,12 +61,18 @@ public class HistoryDTO implements Serializable {
 
     public static class Builder {
 
-        private String source;
+        private EventSource source;
+        private SagaStatus status;
         private String message;
         private LocalDateTime createdAt;
 
-        public Builder source(String source) {
+        public Builder source(EventSource source) {
             this.source = source;
+            return this;
+        }
+
+        public Builder status(SagaStatus status) {
+            this.status = status;
             return this;
         }
 
