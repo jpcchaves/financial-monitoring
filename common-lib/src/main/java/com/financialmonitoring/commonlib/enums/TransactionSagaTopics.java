@@ -11,7 +11,8 @@ public enum TransactionSagaTopics {
     FRAUD_CHECK_FAIL("fraud-check-fail"),
     NOTIFICATION_SUCCESS("notification-success"),
     NOTIFICATION_FAIL("notification-fail"),
-    NOTIFY_ENDING("notify-ending");
+    NOTIFY_ENDING("notify-ending"),
+    TESTE_TEMPORAl("teste-temporal");
 
     private final String transactionTopic;
 
