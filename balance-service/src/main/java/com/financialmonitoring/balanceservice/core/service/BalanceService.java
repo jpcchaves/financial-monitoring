@@ -55,6 +55,7 @@ public class BalanceService {
 
             // Save log
             createAndSaveBalanceCheckLog(event, senderBalance, transactionDto);
+            createAndSaveBalanceCheckLog(event, receiverBalance, transactionDto);
 
             // Subtract sender balance or throw exception if balance is not enough
             subtractBalance(senderBalance, transactionDto);
