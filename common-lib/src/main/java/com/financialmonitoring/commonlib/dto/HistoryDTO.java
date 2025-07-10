@@ -16,6 +16,9 @@ public class HistoryDTO implements Serializable {
     private String message;
     private LocalDateTime createdAt;
 
+    public HistoryDTO() {
+    }
+
     public HistoryDTO(Builder builder) {
         this.source = builder.source;
         this.status = builder.status;

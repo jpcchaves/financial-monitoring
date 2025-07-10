@@ -42,7 +42,7 @@ public class BalanceService {
 
     public void doBalanceCheck(EventDTO event) {
         try {
-            TransactionDTO transactionDto = (TransactionDTO) event.getPayload();
+            TransactionDTO transactionDto = jsonUtils.toTransactionDto(event.getPayload());
             // verify if there's already a balance check with the same eventId (avoid duplicate processing)
             checkDuplicateEvent(event);
 
