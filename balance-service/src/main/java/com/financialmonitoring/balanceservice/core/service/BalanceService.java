@@ -45,9 +45,24 @@ public class BalanceService {
             TransactionDTO transactionDto = (TransactionDTO) event.getPayload();
             // verify if there's already a balance check with the same eventId (avoid duplicate processing)
             checkDuplicateEvent(event);
-            Balance balance = getSenderBalance(transactionDto);
-            createAndSaveBalanceCheckLog(event, balance, transactionDto);
-            updateBalance(balance, transactionDto);
+
+            // Get sender balance
+            Balance senderBalance = getUserBalance(transactionDto.getUserId());
+            validateSenderBalanceIsEnough(senderBalance.getAmount(), transactionDto.getAmount());
+
+            // Get receiver balance
+            Balance receiverBalance = getUserBalance(transactionDto.getReceiverId());
+
+            // Save log
+            createAndSaveBalanceCheckLog(event, senderBalance, transactionDto);
+
+            // Subtract sender balance or throw exception if balance is not enough
+            subtractBalance(senderBalance, transactionDto);
+
+            // Increase receiver balance
+            increaseBalance(receiverBalance, transactionDto);
+
+            // Send success event to orchestrator
             handleSuccess(event);
         } catch (Exception e) {
             handleBalanceCheckFail(event, e.getMessage());
@@ -55,6 +70,17 @@ public class BalanceService {
         }
 
         kafkaProducer.sendEvent(jsonUtils.toJson(event));
+    }
+
+    private void validateSenderBalanceIsEnough(BigDecimal currentSenderBalance,
+            BigDecimal transactionAmount) {
+        if (currentSenderBalance.doubleValue() <= BigDecimal.ZERO.doubleValue()) {
+            throw new ValidationException("You cannot perform this transaction because you don't have enough balance!");
+        }
+
+        if (transactionAmount.doubleValue() > currentSenderBalance.doubleValue()) {
+            throw new ValidationException("You dont have enough balance!");
+        }
     }
 
     private void checkDuplicateEvent(EventDTO event) {
@@ -65,10 +91,10 @@ public class BalanceService {
         }
     }
 
-    private Balance getSenderBalance(TransactionDTO transactionDto) {
-        return balanceRepository.findBySenderId(transactionDto.getUserId())
+    private Balance getUserBalance(String userId) {
+        return balanceRepository.findBySenderId(userId)
                 .orElse(balanceRepository.save(Balance.builder()
-                        .userId(transactionDto.getUserId())
+                        .userId(userId)
                         .amount(BigDecimal.ZERO)
                         .currency(Currency.BRL.name())
                         .build()
@@ -90,7 +116,13 @@ public class BalanceService {
         );
     }
 
-    private void updateBalance(Balance balance,
+    private void subtractBalance(Balance balance,
+            TransactionDTO transactionDTO) {
+        balance.setAmount(balance.getAmount().subtract(transactionDTO.getAmount()));
+        balanceRepository.save(balance);
+    }
+
+    private void increaseBalance(Balance balance,
             TransactionDTO transactionDTO) {
         BigDecimal updatedValue = balance.getAmount().subtract(transactionDTO.getAmount());
 
