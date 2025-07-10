@@ -9,6 +9,7 @@ import com.financialmonitoring.balanceservice.core.utils.JsonUtils;
 import com.financialmonitoring.commonlib.dto.EventDTO;
 import com.financialmonitoring.commonlib.dto.HistoryDTO;
 import com.financialmonitoring.commonlib.dto.TransactionDTO;
+import com.financialmonitoring.commonlib.enums.Currency;
 import com.financialmonitoring.commonlib.enums.EventSource;
 import com.financialmonitoring.commonlib.enums.SagaStatus;
 import com.financialmonitoring.commonlib.exceptions.ResourceNotFoundException;
@@ -69,8 +70,7 @@ public class BalanceService {
                 .orElse(balanceRepository.save(Balance.builder()
                         .userId(transactionDto.getUserId())
                         .amount(BigDecimal.ZERO)
-                        // TODO: add brl enum
-                        .currency("BRL")
+                        .currency(Currency.BRL.name())
                         .build()
                 ));
     }
