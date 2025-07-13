@@ -7,27 +7,28 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class Transaction implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 2840935423246606740L;
+    @Serial private static final long serialVersionUID = 2840935423246606740L;
 
-    @Id
-    private String id;
+    @Id private String id;
     private String userId;
     private String receiverId;
     private String transactionEventId;
+
+    @Indexed(unique = true)
     private String transactionToken;
+
     private BigDecimal amount;
     private String description;
     private TransactionType transactionType;
     private LocalDateTime createdAt;
 
-    public Transaction() {
-    }
+    public Transaction() {}
 
     public Transaction(Builder builder) {
         this.id = builder.id;
@@ -124,8 +125,7 @@ public class Transaction implements Serializable {
             return false;
         }
         Transaction that = (Transaction) o;
-        return Objects.equals(id, that.id) && Objects.equals(transactionEventId,
-                that.transactionEventId);
+        return Objects.equals(id, that.id) && Objects.equals(transactionEventId, that.transactionEventId);
     }
 
     @Override
@@ -135,12 +135,20 @@ public class Transaction implements Serializable {
 
     @Override
     public String toString() {
-        return "TransactionPayload{" +
-                "id='" + id + '\'' +
-                ", userId='" + userId + '\'' +
-                ", receiverId='" + receiverId + '\'' +
-                ", transactionEventId='" + transactionEventId + '\'' +
-                '}';
+        return "TransactionPayload{"
+                + "id='"
+                + id
+                + '\''
+                + ", userId='"
+                + userId
+                + '\''
+                + ", receiverId='"
+                + receiverId
+                + '\''
+                + ", transactionEventId='"
+                + transactionEventId
+                + '\''
+                + '}';
     }
 
     public static class Builder {
@@ -171,6 +179,11 @@ public class Transaction implements Serializable {
 
         public Builder transactionEventId(String transactionEventId) {
             this.transactionEventId = transactionEventId;
+            return this;
+        }
+
+        public Builder transactionToken(String transactionToken) {
+            this.transactionToken = transactionToken;
             return this;
         }
 

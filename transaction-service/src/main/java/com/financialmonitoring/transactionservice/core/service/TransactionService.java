@@ -66,6 +66,7 @@ public class TransactionService {
         return Event.builder()
                 .eventId(transaction.getTransactionEventId())
                 .transactionId(transaction.getId())
+                .transactionToken(transaction.getTransactionToken())
                 .payload(jsonUtils.toJson(transaction))
                 .createdAt(LocalDateTime.now())
                 .build();
