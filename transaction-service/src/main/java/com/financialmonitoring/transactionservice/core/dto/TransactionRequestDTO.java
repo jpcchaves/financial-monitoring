@@ -10,8 +10,7 @@ import java.math.BigDecimal;
 
 public class TransactionRequestDTO implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 3366598129423135657L;
+    @Serial private static final long serialVersionUID = 3366598129423135657L;
 
     @NotBlank(message = "User ID cannot be blank")
     private String userId;
@@ -27,6 +26,9 @@ public class TransactionRequestDTO implements Serializable {
 
     @NotNull(message = "Transaction type cannot be null")
     private TransactionType transactionType;
+
+    @NotBlank(message = "The request must contain a transaction token to proceed")
+    private String transactionToken;
 
     public TransactionRequestDTO() {}
 
@@ -68,5 +70,14 @@ public class TransactionRequestDTO implements Serializable {
 
     public void setTransactionType(TransactionType transactionType) {
         this.transactionType = transactionType;
+    }
+
+    public String getTransactionToken() {
+        return transactionToken;
+    }
+
+    public TransactionRequestDTO setTransactionToken(String transactionToken) {
+        this.transactionToken = transactionToken;
+        return this;
     }
 }

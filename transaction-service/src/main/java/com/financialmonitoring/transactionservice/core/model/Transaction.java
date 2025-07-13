@@ -20,6 +20,7 @@ public class Transaction implements Serializable {
     private String userId;
     private String receiverId;
     private String transactionEventId;
+    private String transactionToken;
     private BigDecimal amount;
     private String description;
     private TransactionType transactionType;
@@ -37,6 +38,11 @@ public class Transaction implements Serializable {
         this.description = builder.description;
         this.transactionType = builder.transactionType;
         this.createdAt = builder.createdAt;
+        this.transactionToken = builder.transactionToken;
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public String getId() {
@@ -69,6 +75,15 @@ public class Transaction implements Serializable {
 
     public void setTransactionEventId(String transactionEventId) {
         this.transactionEventId = transactionEventId;
+    }
+
+    public String getTransactionToken() {
+        return transactionToken;
+    }
+
+    public Transaction setTransactionToken(String transactionToken) {
+        this.transactionToken = transactionToken;
+        return this;
     }
 
     public BigDecimal getAmount() {
@@ -128,15 +143,12 @@ public class Transaction implements Serializable {
                 '}';
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
     public static class Builder {
         private String id;
         private String userId;
         private String receiverId;
         private String transactionEventId;
+        private String transactionToken;
         private BigDecimal amount;
         private String description;
         private TransactionType transactionType;
@@ -181,6 +193,7 @@ public class Transaction implements Serializable {
             this.createdAt = createdAt;
             return this;
         }
+
         public Transaction build() {
             return new Transaction(this);
         }
