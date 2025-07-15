@@ -13,21 +13,19 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class Event implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = -5906042640604343912L;
+    @Serial private static final long serialVersionUID = -5906042640604343912L;
 
-    @Id
-    private String id;
+    @Id private String id;
     private String eventId;
     private String transactionId;
+    private String transactionToken;
     private String source;
     private SagaStatus sagaStatus;
     private String payload;
     private List<HistoryDTO> eventHistory;
     private LocalDateTime createdAt;
 
-    public Event() {
-    }
+    public Event() {}
 
     private Event(Builder builder) {
         this.id = builder.id;
@@ -64,8 +62,16 @@ public class Event implements Serializable {
         return transactionId;
     }
 
-    public Event setTransactionId(String transactionId) {
+    public void setTransactionId(String transactionId) {
         this.transactionId = transactionId;
+    }
+
+    public String getTransactionToken() {
+        return transactionToken;
+    }
+
+    public Event setTransactionToken(String transactionToken) {
+        this.transactionToken = transactionToken;
         return this;
     }
 
@@ -125,9 +131,25 @@ public class Event implements Serializable {
 
     @Override
     public String toString() {
-        return "Event{" + "id='" + id + '\'' + ", eventId='" + eventId + '\'' + ", source='" + source + '\''
-                + ", sagaStatus=" + sagaStatus + ", payload=" + payload + ", eventHistory=" + eventHistory
-                + ", createdAt=" + createdAt + '}';
+        return "Event{"
+                + "id='"
+                + id
+                + '\''
+                + ", eventId='"
+                + eventId
+                + '\''
+                + ", source='"
+                + source
+                + '\''
+                + ", sagaStatus="
+                + sagaStatus
+                + ", payload="
+                + payload
+                + ", eventHistory="
+                + eventHistory
+                + ", createdAt="
+                + createdAt
+                + '}';
     }
 
     public static class Builder {
@@ -135,6 +157,7 @@ public class Event implements Serializable {
         private String id;
         private String eventId;
         private String transactionId;
+        private String transactionToken;
         private String source;
         private SagaStatus sagaStatus;
         private String payload;
@@ -153,6 +176,11 @@ public class Event implements Serializable {
 
         public Builder transactionId(String transactionId) {
             this.transactionId = transactionId;
+            return this;
+        }
+
+        public Builder transactionToken(String transactionToken) {
+            this.transactionToken = transactionToken;
             return this;
         }
 

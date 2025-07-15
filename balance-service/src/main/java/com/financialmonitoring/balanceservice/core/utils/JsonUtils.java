@@ -2,6 +2,7 @@ package com.financialmonitoring.balanceservice.core.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financialmonitoring.commonlib.dto.EventDTO;
+import com.financialmonitoring.commonlib.dto.TransactionDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -30,6 +31,15 @@ public class JsonUtils {
             return objectMapper.readValue(json, EventDTO.class);
         } catch (Exception ex) {
             logger.error("Error converting JSON to Event", ex);
+            return null;
+        }
+    }
+
+    public TransactionDTO toTransactionDto(Object json) {
+        try {
+            return objectMapper.readValue(json.toString(), TransactionDTO.class);
+        } catch (Exception ex) {
+            logger.error("Error converting JSON to TransactionDTO", ex);
             return null;
         }
     }

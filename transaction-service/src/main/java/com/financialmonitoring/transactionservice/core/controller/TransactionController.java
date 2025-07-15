@@ -1,9 +1,11 @@
 package com.financialmonitoring.transactionservice.core.controller;
 
 import com.financialmonitoring.transactionservice.core.dto.TransactionRequestDTO;
+import com.financialmonitoring.transactionservice.core.dto.TransactionTokenDTO;
 import com.financialmonitoring.transactionservice.core.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,5 +24,10 @@ public class TransactionController {
     @PostMapping
     public ResponseEntity<TransactionRequestDTO> transfer(@Valid @RequestBody TransactionRequestDTO requestBody) {
         return ResponseEntity.ok(transactionService.doTransfer(requestBody));
+    }
+
+    @GetMapping("/generate-token")
+    public ResponseEntity<TransactionTokenDTO> getTransactionToken() {
+        return ResponseEntity.ok(transactionService.generateTransactionToken());
     }
 }
