@@ -27,7 +27,7 @@ public class AuthRouteLocator {
                 .route(
                         "transaction-service",
                         r ->
-                                r.path("/transactions")
+                                r.path("/transactions", "/transactions/*")
                                         .filters(f -> f.prefixPath("/api/v1")
                                                 .filter(jwtAuthGatewayFilter.apply(new JwtAuthGatewayFilter.Config())))
                                         .uri("lb://TRANSACTION-SERVICE"))
