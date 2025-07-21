@@ -1,4 +1,4 @@
-package com.financialmonitoring.userservice.domain.dto;
+package com.financialmonitoring.userservice.adapter.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

@@ -1,6 +1,7 @@
 package com.financialmonitoring.userservice.adapter.security;
 
 import com.financialmonitoring.userservice.adapter.utils.JwtUtils;
+import com.financialmonitoring.userservice.adapter.utils.TokenUtils;
 import com.financialmonitoring.userservice.domain.service.AuthService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,15 +17,14 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 public class AuthenticationFilter extends OncePerRequestFilter {
-
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
 
-    private final TokenProvider tokenProvider;
+    private final TokenUtils tokenUtils;
     private final AuthService authService;
     private final JwtUtils jwtUtils;
 
-    public AuthenticationFilter(TokenProvider tokenProvider, AuthService authService, JwtUtils jwtUtils) {
-        this.tokenProvider = tokenProvider;
+    public AuthenticationFilter(TokenUtils tokenUtils, AuthService authService, JwtUtils jwtUtils) {
+        this.tokenUtils = tokenUtils;
         this.authService = authService;
         this.jwtUtils = jwtUtils;
     }
@@ -34,8 +34,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         try {
             String token = jwtUtils.getTokenFromRequest(request);
 
-            if (tokenProvider.isTokenValid(token)) {
-                String tokenSubject = tokenProvider.getTokenSubject(token);
+            if (tokenUtils.isTokenValid(token)) {
+                String tokenSubject = tokenUtils.getTokenSubject(token);
 
                 UserDetails userDetails = authService.loadUserByUsername(tokenSubject);
 

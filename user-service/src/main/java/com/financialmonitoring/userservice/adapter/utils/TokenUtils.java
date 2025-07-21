@@ -1,8 +1,7 @@
 package com.financialmonitoring.userservice.adapter.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.financialmonitoring.userservice.adapter.dto.UserLoginResponseDTO;
 import com.financialmonitoring.userservice.adapter.out.entity.User;
-import com.financialmonitoring.userservice.domain.dto.LoginResponseDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -26,17 +25,11 @@ public class TokenUtils {
     private static final String AUTHORITIES_CLAIM_KEY = "authorities";
     private static final String USER_CLAIM_KEY = "user";
 
-    private final ObjectMapper objectMapper;
-
     @Value("${jwt.secret}")
     private String jwtSecret;
 
     @Value("${jwt.expiration-time}")
     private String expirationTime;
-
-    public TokenUtils(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
 
     public String generateToken(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
@@ -72,8 +65,8 @@ public class TokenUtils {
         return Map.of(USER_CLAIM_KEY, getUserClaimValue(user), AUTHORITIES_CLAIM_KEY, authentication.getAuthorities());
     }
 
-    private LoginResponseDTO.UserLoginResponseDTO getUserClaimValue(User user) {
-        return new LoginResponseDTO.UserLoginResponseDTO(user.getId(), user.getEmail());
+    private UserLoginResponseDTO getUserClaimValue(User user) {
+        return new UserLoginResponseDTO(user.getId(), user.getEmail());
     }
 
     private SecretKey generateKey() {

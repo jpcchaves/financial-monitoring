@@ -1,4 +1,4 @@
-package com.financialmonitoring.userservice.domain.dto;
+package com.financialmonitoring.userservice.adapter.dto;
 
 public class RegisterResponseDTO {
     private Long id;

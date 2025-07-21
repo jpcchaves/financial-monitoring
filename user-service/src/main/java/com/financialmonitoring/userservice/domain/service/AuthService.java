@@ -1,14 +1,11 @@
 package com.financialmonitoring.userservice.domain.service;
 
+import com.financialmonitoring.userservice.adapter.dto.*;
 import com.financialmonitoring.userservice.adapter.out.entity.Role;
 import com.financialmonitoring.userservice.adapter.out.entity.User;
 import com.financialmonitoring.userservice.adapter.utils.JwtUtils;
 import com.financialmonitoring.userservice.adapter.utils.TokenUtils;
 import com.financialmonitoring.userservice.config.exception.BadRequestException;
-import com.financialmonitoring.userservice.domain.dto.LoginRequestDTO;
-import com.financialmonitoring.userservice.domain.dto.LoginResponseDTO;
-import com.financialmonitoring.userservice.domain.dto.RegisterRequestDTO;
-import com.financialmonitoring.userservice.domain.dto.RegisterResponseDTO;
 import com.financialmonitoring.userservice.domain.port.in.GetUserByEmailUseCase;
 import com.financialmonitoring.userservice.domain.port.in.LoginUseCase;
 import com.financialmonitoring.userservice.domain.port.in.RegisterUserUseCase;
@@ -65,7 +62,7 @@ public class AuthService implements LoginUseCase, RegisterUserUseCase, VerifyTok
             Authentication authentication = authenticationManager.authenticate(authToken);
 
             return new LoginResponseDTO(tokenUtils.generateToken(authentication),
-                    new LoginResponseDTO.UserLoginResponseDTO(user.getId(), user.getEmail()));
+                    new UserLoginResponseDTO(user.getId(), user.getEmail()));
         } catch (AuthenticationException e) {
             logger.error("Error authenticating user", e);
             throw new BadRequestException("Error authenticating user: " + e.getMessage());

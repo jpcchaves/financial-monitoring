@@ -1,9 +1,9 @@
 package com.financialmonitoring.userservice.adapter.in.rest;
 
-import com.financialmonitoring.userservice.domain.dto.LoginRequestDTO;
-import com.financialmonitoring.userservice.domain.dto.LoginResponseDTO;
-import com.financialmonitoring.userservice.domain.dto.RegisterRequestDTO;
-import com.financialmonitoring.userservice.domain.dto.RegisterResponseDTO;
+import com.financialmonitoring.userservice.adapter.dto.LoginRequestDTO;
+import com.financialmonitoring.userservice.adapter.dto.LoginResponseDTO;
+import com.financialmonitoring.userservice.adapter.dto.RegisterRequestDTO;
+import com.financialmonitoring.userservice.adapter.dto.RegisterResponseDTO;
 import com.financialmonitoring.userservice.domain.port.in.LoginUseCase;
 import com.financialmonitoring.userservice.domain.port.in.RegisterUserUseCase;
 import com.financialmonitoring.userservice.domain.port.in.VerifyTokenUseCase;
