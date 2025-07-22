@@ -2,7 +2,7 @@ package com.financialmonitoring.userservice.adapter.security;
 
 import com.financialmonitoring.userservice.adapter.utils.JwtUtils;
 import com.financialmonitoring.userservice.adapter.utils.TokenUtils;
-import com.financialmonitoring.userservice.domain.service.AuthService;
+import com.financialmonitoring.userservice.domain.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,12 +20,12 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
 
     private final TokenUtils tokenUtils;
-    private final AuthService authService;
+    private final UserService authService;
     private final JwtUtils jwtUtils;
 
-    public AuthenticationFilter(TokenUtils tokenUtils, AuthService authService, JwtUtils jwtUtils) {
+    public AuthenticationFilter(TokenUtils tokenUtils, UserService userService, JwtUtils jwtUtils) {
         this.tokenUtils = tokenUtils;
-        this.authService = authService;
+        this.authService = userService;
         this.jwtUtils = jwtUtils;
     }
 

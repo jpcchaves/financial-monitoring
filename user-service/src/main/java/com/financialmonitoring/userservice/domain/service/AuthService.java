@@ -18,14 +18,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Set;
 
-public class AuthService implements LoginUseCase, RegisterUserUseCase, VerifyTokenUseCase, GetUserByEmailUseCase, UserDetailsService {
+public class AuthService implements LoginUseCase, RegisterUserUseCase, VerifyTokenUseCase, GetUserByEmailUseCase {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
@@ -91,11 +88,6 @@ public class AuthService implements LoginUseCase, RegisterUserUseCase, VerifyTok
     public User getUserByEmail(String email) {
         return authRepositoryPort.findByEmail(email).orElseThrow(
                 () -> new BadRequestException("User not found with the given email: " + email));
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return getUserByEmail(email);
     }
 
     private void validateRegister(RegisterRequestDTO requestDTO) {
