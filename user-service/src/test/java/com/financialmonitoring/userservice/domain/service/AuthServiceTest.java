@@ -117,7 +117,7 @@ class AuthServiceTest {
         registerRequestDTO.setConfirmPassword(RAW_PASSWORD);
 
         when(authRepositoryPort.existsByEmail(user.getEmail())).thenReturn(false);
-        when(authRepositoryPort.save(any(User.classg))).thenReturn(user);
+        when(authRepositoryPort.save(any(User.class))).thenReturn(user);
         when(roleRepositoryPort.findByName("ROLE_USER")).thenReturn(Optional.of(new Role(1L, "ROLE_USER")));
 
         RegisterResponseDTO response = authService.register(registerRequestDTO);
