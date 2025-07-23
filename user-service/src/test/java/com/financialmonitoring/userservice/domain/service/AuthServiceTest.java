@@ -135,4 +135,30 @@ class AuthServiceTest {
         assertNotNull(response);
         assertEquals(user.getEmail(), response.getEmail());
     }
+
+    @Test
+    void shouldThrowException_WhenUserAlreadyExistsWithEmail() {
+        when(authRepositoryPort.existsByEmail(user.getEmail())).thenReturn(true);
+
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> authService.register(any()));
+
+        assertTrue(exception.getMessage()
+                .contains("Email already in use"));
+    }
+
+    @Test
+    void shouldThrowException_WhenPasswordAndConfirmPasswordAreDifferent() {
+        RegisterRequestDTO registerRequestDTO = new RegisterRequestDTO();
+        registerRequestDTO.setEmail(user.getEmail());
+        registerRequestDTO.setPassword(RAW_PASSWORD);
+        registerRequestDTO.setConfirmPassword(RAW_PASSWORD + "different");
+
+        when(authRepositoryPort.existsByEmail(user.getEmail())).thenReturn(false);
+
+        BadRequestException exception = assertThrows(BadRequestException.class,
+                () -> authService.register(registerRequestDTO));
+
+        assertTrue(exception.getMessage()
+                .contains("Passwords do not match"));
+    }
 }
