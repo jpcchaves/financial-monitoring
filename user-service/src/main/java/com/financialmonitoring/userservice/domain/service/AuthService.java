@@ -22,8 +22,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class AuthService implements LoginUseCase, RegisterUserUseCase, VerifyTokenUseCase, GetUserByEmailUseCase {
 
@@ -80,7 +78,7 @@ public class AuthService implements LoginUseCase, RegisterUserUseCase, VerifyTok
     @Override
     public RegisterResponseDTO register(RegisterRequestDTO requestDTO) {
         validateRegister(requestDTO);
-        User user = userFactory.createUserFromDto(requestDTO, getDefaultUserRoles());
+        User user = userFactory.createUserFromDto(requestDTO, getOrCreateDefaultRole());
         user = authRepositoryPort.save(user);
         return new RegisterResponseDTO(user.getId(), user.getFirstName(), user.getEmail());
     }
@@ -107,9 +105,7 @@ public class AuthService implements LoginUseCase, RegisterUserUseCase, VerifyTok
         }
     }
 
-    private Set<Role> getDefaultUserRoles() {
-        return Stream.of(roleRepositoryPort.findByName("ROLE_USER")
-                        .orElseGet(() -> roleRepositoryPort.saveAndFlush(new Role("ROLE_USER"))))
-                .collect(Collectors.toSet());
+    private Set<Role> getOrCreateDefaultRole() {
+        return Set.of(roleRepositoryPort.getOrCreateDefaultRole());
     }
 }

@@ -113,7 +113,8 @@ class AuthServiceTest {
 
         BadRequestException exception = assertThrows(BadRequestException.class, () -> authService.login(request));
 
-        assertTrue(exception.getMessage().contains("Error authenticating user"));
+        assertTrue(exception.getMessage()
+                .contains("Error authenticating user"));
     }
 
     @Test
@@ -126,7 +127,7 @@ class AuthServiceTest {
 
         when(authRepositoryPort.existsByEmail(user.getEmail())).thenReturn(false);
         when(authRepositoryPort.save(any(User.class))).thenReturn(user);
-        when(roleRepositoryPort.findByName("ROLE_USER")).thenReturn(Optional.of(roleTest));
+        when(roleRepositoryPort.getOrCreateDefaultRole()).thenReturn(roleTest);
         when(userFactory.createUserFromDto(registerRequestDTO, Set.of(roleTest))).thenReturn(user);
 
         RegisterResponseDTO response = authService.register(registerRequestDTO);
