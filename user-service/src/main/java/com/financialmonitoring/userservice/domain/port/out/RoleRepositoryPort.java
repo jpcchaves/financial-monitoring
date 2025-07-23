@@ -12,4 +12,6 @@ public interface RoleRepositoryPort {
     Optional<Role> findByName(String name);
 
     Role saveAndFlush(Role role);
+
+    Role getOrCreateDefaultRole();
 }

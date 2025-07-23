@@ -25,4 +25,10 @@ public class JpaRoleRepository implements RoleRepositoryPort {
     public Role saveAndFlush(Role role) {
         return repository.saveAndFlush(role);
     }
+
+    @Override
+    public Role getOrCreateDefaultRole() {
+        return repository.findByName("ROLE_USER")
+                .orElseGet(() -> repository.saveAndFlush(new Role("ROLE_USER")));
+    }
 }
