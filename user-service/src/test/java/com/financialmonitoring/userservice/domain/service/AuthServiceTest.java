@@ -2,6 +2,8 @@ package com.financialmonitoring.userservice.domain.service;
 
 import com.financialmonitoring.userservice.adapter.dto.LoginRequestDTO;
 import com.financialmonitoring.userservice.adapter.dto.LoginResponseDTO;
+import com.financialmonitoring.userservice.adapter.dto.RegisterRequestDTO;
+import com.financialmonitoring.userservice.adapter.dto.RegisterResponseDTO;
 import com.financialmonitoring.userservice.adapter.out.entity.Role;
 import com.financialmonitoring.userservice.adapter.out.entity.User;
 import com.financialmonitoring.userservice.adapter.utils.JwtUtils;
@@ -105,5 +107,22 @@ class AuthServiceTest {
         BadRequestException exception = assertThrows(BadRequestException.class, () -> authService.login(request));
 
         assertTrue(exception.getMessage().contains("Error authenticating user"));
+    }
+
+    @Test
+    void shouldRegisterUserSuccessfully_WhenRegisterRequestIsValid() {
+        RegisterRequestDTO registerRequestDTO = new RegisterRequestDTO();
+        registerRequestDTO.setEmail(user.getEmail());
+        registerRequestDTO.setPassword(RAW_PASSWORD);
+        registerRequestDTO.setConfirmPassword(RAW_PASSWORD);
+
+        when(authRepositoryPort.existsByEmail(user.getEmail())).thenReturn(false);
+        when(authRepositoryPort.save(any(User.classg))).thenReturn(user);
+        when(roleRepositoryPort.findByName("ROLE_USER")).thenReturn(Optional.of(new Role(1L, "ROLE_USER")));
+
+        RegisterResponseDTO response = authService.register(registerRequestDTO);
+
+        assertNotNull(response);
+        assertEquals(user.getEmail(), response.getEmail());
     }
 }
