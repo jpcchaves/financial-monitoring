@@ -70,6 +70,7 @@ public class AuthService implements LoginUseCase, RegisterUserUseCase, VerifyTok
     public RegisterResponseDTO register(RegisterRequestDTO requestDTO) {
         validateRegister(requestDTO);
 
+        // TODO: criar uma factory para ser mais testavel
         User user = User.builder().email(requestDTO.getEmail()).password(
                 passwordEncoder.encode(requestDTO.getPassword())).firstName(requestDTO.getFirstName()).lastName(
                 requestDTO.getLastName()).roles(Set.of(getDefaultUserRoles())).active(Boolean.TRUE).build();
