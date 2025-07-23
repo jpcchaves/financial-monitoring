@@ -6,6 +6,7 @@ import com.financialmonitoring.userservice.adapter.out.entity.User;
 import com.financialmonitoring.userservice.adapter.utils.JwtUtils;
 import com.financialmonitoring.userservice.adapter.utils.TokenUtils;
 import com.financialmonitoring.userservice.config.exception.BadRequestException;
+import com.financialmonitoring.userservice.domain.port.factory.UserFactory;
 import com.financialmonitoring.userservice.domain.port.in.GetUserByEmailUseCase;
 import com.financialmonitoring.userservice.domain.port.in.LoginUseCase;
 import com.financialmonitoring.userservice.domain.port.in.RegisterUserUseCase;
@@ -21,6 +22,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class AuthService implements LoginUseCase, RegisterUserUseCase, VerifyTokenUseCase, GetUserByEmailUseCase {
 
@@ -28,16 +31,24 @@ public class AuthService implements LoginUseCase, RegisterUserUseCase, VerifyTok
 
     private final AuthRepositoryPort authRepositoryPort;
     private final RoleRepositoryPort roleRepositoryPort;
+    private final UserFactory userFactory;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final TokenUtils tokenUtils;
     private final JwtUtils jwtUtils;
 
-    public AuthService(AuthRepositoryPort authRepositoryPort, RoleRepositoryPort roleRepositoryPort,
-                       PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager,
-                       TokenUtils tokenUtils, JwtUtils jwtUtils) {
+    public AuthService(
+            AuthRepositoryPort authRepositoryPort,
+            RoleRepositoryPort roleRepositoryPort,
+            UserFactory userFactory,
+            PasswordEncoder passwordEncoder,
+            AuthenticationManager authenticationManager,
+            TokenUtils tokenUtils,
+            JwtUtils jwtUtils
+    ) {
         this.authRepositoryPort = authRepositoryPort;
         this.roleRepositoryPort = roleRepositoryPort;
+        this.userFactory = userFactory;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.tokenUtils = tokenUtils;
@@ -69,14 +80,8 @@ public class AuthService implements LoginUseCase, RegisterUserUseCase, VerifyTok
     @Override
     public RegisterResponseDTO register(RegisterRequestDTO requestDTO) {
         validateRegister(requestDTO);
-
-        // TODO: criar uma factory para ser mais testavel
-        User user = User.builder().email(requestDTO.getEmail()).password(
-                passwordEncoder.encode(requestDTO.getPassword())).firstName(requestDTO.getFirstName()).lastName(
-                requestDTO.getLastName()).roles(Set.of(getDefaultUserRoles())).active(Boolean.TRUE).build();
-
+        User user = userFactory.createUserFromDto(requestDTO, getDefaultUserRoles());
         user = authRepositoryPort.save(user);
-
         return new RegisterResponseDTO(user.getId(), user.getFirstName(), user.getEmail());
     }
 
@@ -87,8 +92,8 @@ public class AuthService implements LoginUseCase, RegisterUserUseCase, VerifyTok
 
     @Override
     public User getUserByEmail(String email) {
-        return authRepositoryPort.findByEmail(email).orElseThrow(
-                () -> new BadRequestException("User not found with the given email: " + email));
+        return authRepositoryPort.findByEmail(email)
+                .orElseThrow(() -> new BadRequestException("User not found with the given email: " + email));
     }
 
     private void validateRegister(RegisterRequestDTO requestDTO) {
@@ -96,13 +101,15 @@ public class AuthService implements LoginUseCase, RegisterUserUseCase, VerifyTok
             throw new BadRequestException("Email already in use");
         }
 
-        if (!requestDTO.getPassword().equals(requestDTO.getConfirmPassword())) {
+        if (!requestDTO.getPassword()
+                .equals(requestDTO.getConfirmPassword())) {
             throw new BadRequestException("Passwords do not match");
         }
     }
 
-    private Role getDefaultUserRoles() {
-        return roleRepositoryPort.findByName("ROLE_USER").orElseGet(
-                () -> roleRepositoryPort.saveAndFlush(new Role("ROLE_USER")));
+    private Set<Role> getDefaultUserRoles() {
+        return Stream.of(roleRepositoryPort.findByName("ROLE_USER")
+                        .orElseGet(() -> roleRepositoryPort.saveAndFlush(new Role("ROLE_USER"))))
+                .collect(Collectors.toSet());
     }
 }

@@ -6,9 +6,9 @@ import com.financialmonitoring.userservice.adapter.dto.RegisterRequestDTO;
 import com.financialmonitoring.userservice.adapter.dto.RegisterResponseDTO;
 import com.financialmonitoring.userservice.adapter.out.entity.Role;
 import com.financialmonitoring.userservice.adapter.out.entity.User;
-import com.financialmonitoring.userservice.adapter.utils.JwtUtils;
 import com.financialmonitoring.userservice.adapter.utils.TokenUtils;
 import com.financialmonitoring.userservice.config.exception.BadRequestException;
+import com.financialmonitoring.userservice.domain.port.factory.UserFactory;
 import com.financialmonitoring.userservice.domain.port.out.AuthRepositoryPort;
 import com.financialmonitoring.userservice.domain.port.out.RoleRepositoryPort;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +49,7 @@ class AuthServiceTest {
     private TokenUtils tokenUtils;
 
     @Mock
-    private JwtUtils jwtUtils;
+    private UserFactory userFactory;
 
     @InjectMocks
     private AuthService authService;
@@ -61,8 +61,14 @@ class AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = User.builder().id(123L).email("test@test.com").firstName("Test").active(true).password(
-                ENCODED_PASSWORD).roles(Set.of(new Role("ROLE_TEST"))).build();
+        user = User.builder()
+                .id(123L)
+                .email("test@test.com")
+                .firstName("Test")
+                .active(true)
+                .password(ENCODED_PASSWORD)
+                .roles(Set.of(new Role("ROLE_TEST")))
+                .build();
     }
 
     @Test
@@ -79,7 +85,8 @@ class AuthServiceTest {
 
         assertNotNull(response);
         assertEquals(FAKE_JWT_TOKEN, response.getToken());
-        assertEquals(user.getEmail(), response.getUser().getEmail());
+        assertEquals(user.getEmail(), response.getUser()
+                .getEmail());
     }
 
     @Test
@@ -111,6 +118,7 @@ class AuthServiceTest {
 
     @Test
     void shouldRegisterUserSuccessfully_WhenRegisterRequestIsValid() {
+        Role roleTest = new Role(1L, "ROLE_TEST");
         RegisterRequestDTO registerRequestDTO = new RegisterRequestDTO();
         registerRequestDTO.setEmail(user.getEmail());
         registerRequestDTO.setPassword(RAW_PASSWORD);
@@ -118,7 +126,8 @@ class AuthServiceTest {
 
         when(authRepositoryPort.existsByEmail(user.getEmail())).thenReturn(false);
         when(authRepositoryPort.save(any(User.class))).thenReturn(user);
-        when(roleRepositoryPort.findByName("ROLE_USER")).thenReturn(Optional.of(new Role(1L, "ROLE_USER")));
+        when(roleRepositoryPort.findByName("ROLE_USER")).thenReturn(Optional.of(roleTest));
+        when(userFactory.createUserFromDto(registerRequestDTO, Set.of(roleTest))).thenReturn(user);
 
         RegisterResponseDTO response = authService.register(registerRequestDTO);
 
