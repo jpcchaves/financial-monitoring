@@ -6,11 +6,11 @@ import com.financialmonitoring.userservice.adapter.dto.RegisterRequestDTO;
 import com.financialmonitoring.userservice.adapter.dto.RegisterResponseDTO;
 import com.financialmonitoring.userservice.adapter.out.entity.Role;
 import com.financialmonitoring.userservice.adapter.out.entity.User;
-import com.financialmonitoring.userservice.adapter.utils.TokenUtils;
 import com.financialmonitoring.userservice.config.exception.BadRequestException;
 import com.financialmonitoring.userservice.domain.port.factory.UserFactory;
 import com.financialmonitoring.userservice.domain.port.out.AuthRepositoryPort;
 import com.financialmonitoring.userservice.domain.port.out.RoleRepositoryPort;
+import com.financialmonitoring.userservice.domain.utils.TokenUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -136,6 +136,8 @@ class AuthServiceTest {
         assertEquals(user.getEmail(), response.getEmail());
     }
 
+    // This test takes a little bit longer to execute because authService.register uses passwordEncoder
+    // which uses Bcrypt implementation. To encode passwords, it takes 1000ms more or less
     @Test
     void shouldThrowException_WhenUserAlreadyExistsWithEmail() {
         RegisterRequestDTO registerRequestDTO = new RegisterRequestDTO();

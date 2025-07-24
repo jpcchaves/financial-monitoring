@@ -1,12 +1,11 @@
 package com.financialmonitoring.userservice.config.auth;
 
-import com.financialmonitoring.userservice.adapter.utils.JwtUtils;
-import com.financialmonitoring.userservice.adapter.utils.TokenUtils;
 import com.financialmonitoring.userservice.domain.port.factory.UserFactory;
 import com.financialmonitoring.userservice.domain.port.out.AuthRepositoryPort;
 import com.financialmonitoring.userservice.domain.port.out.RoleRepositoryPort;
 import com.financialmonitoring.userservice.domain.service.AuthService;
 import com.financialmonitoring.userservice.domain.service.UserService;
+import com.financialmonitoring.userservice.domain.utils.TokenUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,11 +21,10 @@ public class AuthConfig {
             PasswordEncoder passwordEncoder,
             UserFactory userFactory,
             AuthenticationManager authenticationManager,
-            TokenUtils tokenUtils,
-            JwtUtils jwtUtils
+            TokenUtils tokenUtils
     ) {
         return new AuthService(authRepositoryPort, roleRepositoryPort, userFactory, passwordEncoder,
-                authenticationManager, tokenUtils, jwtUtils);
+                authenticationManager, tokenUtils);
     }
 
     @Bean

@@ -3,8 +3,6 @@ package com.financialmonitoring.userservice.domain.service;
 import com.financialmonitoring.userservice.adapter.dto.*;
 import com.financialmonitoring.userservice.adapter.out.entity.Role;
 import com.financialmonitoring.userservice.adapter.out.entity.User;
-import com.financialmonitoring.userservice.adapter.utils.JwtUtils;
-import com.financialmonitoring.userservice.adapter.utils.TokenUtils;
 import com.financialmonitoring.userservice.config.exception.BadRequestException;
 import com.financialmonitoring.userservice.domain.port.factory.UserFactory;
 import com.financialmonitoring.userservice.domain.port.in.GetUserByEmailUseCase;
@@ -13,6 +11,7 @@ import com.financialmonitoring.userservice.domain.port.in.RegisterUserUseCase;
 import com.financialmonitoring.userservice.domain.port.in.VerifyTokenUseCase;
 import com.financialmonitoring.userservice.domain.port.out.AuthRepositoryPort;
 import com.financialmonitoring.userservice.domain.port.out.RoleRepositoryPort;
+import com.financialmonitoring.userservice.domain.utils.TokenUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,7 +32,6 @@ public class AuthService implements LoginUseCase, RegisterUserUseCase, VerifyTok
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final TokenUtils tokenUtils;
-    private final JwtUtils jwtUtils;
 
     public AuthService(
             AuthRepositoryPort authRepositoryPort,
@@ -41,8 +39,7 @@ public class AuthService implements LoginUseCase, RegisterUserUseCase, VerifyTok
             UserFactory userFactory,
             PasswordEncoder passwordEncoder,
             AuthenticationManager authenticationManager,
-            TokenUtils tokenUtils,
-            JwtUtils jwtUtils
+            TokenUtils tokenUtils
     ) {
         this.authRepositoryPort = authRepositoryPort;
         this.roleRepositoryPort = roleRepositoryPort;
@@ -50,7 +47,6 @@ public class AuthService implements LoginUseCase, RegisterUserUseCase, VerifyTok
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.tokenUtils = tokenUtils;
-        this.jwtUtils = jwtUtils;
     }
 
     @Override
@@ -85,7 +81,7 @@ public class AuthService implements LoginUseCase, RegisterUserUseCase, VerifyTok
 
     @Override
     public boolean verifyToken(String authHeader) {
-        return tokenUtils.validateToken(jwtUtils.extractTokenFromHeader(authHeader));
+        return tokenUtils.validateToken(tokenUtils.extractTokenFromHeader(authHeader));
     }
 
     @Override
