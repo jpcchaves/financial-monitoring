@@ -126,9 +126,9 @@ class AuthServiceTest {
         registerRequestDTO.setConfirmPassword(RAW_PASSWORD);
 
         when(authRepositoryPort.existsByEmail(user.getEmail())).thenReturn(false);
-        when(authRepositoryPort.save(any(User.class))).thenReturn(user);
-        when(roleRepositoryPort.getOrCreateDefaultRole()).thenReturn(roleTest);
         when(userFactory.createUserFromDto(registerRequestDTO, Set.of(roleTest))).thenReturn(user);
+        when(authRepositoryPort.save(user)).thenReturn(user);
+        when(roleRepositoryPort.getOrCreateDefaultRole()).thenReturn(roleTest);
 
         RegisterResponseDTO response = authService.register(registerRequestDTO);
 
@@ -138,9 +138,15 @@ class AuthServiceTest {
 
     @Test
     void shouldThrowException_WhenUserAlreadyExistsWithEmail() {
+        RegisterRequestDTO registerRequestDTO = new RegisterRequestDTO();
+        registerRequestDTO.setEmail(user.getEmail());
+        registerRequestDTO.setPassword(RAW_PASSWORD);
+        registerRequestDTO.setConfirmPassword(RAW_PASSWORD);
+
         when(authRepositoryPort.existsByEmail(user.getEmail())).thenReturn(true);
 
-        BadRequestException exception = assertThrows(BadRequestException.class, () -> authService.register(any()));
+        BadRequestException exception = assertThrows(BadRequestException.class,
+                () -> authService.register(registerRequestDTO));
 
         assertTrue(exception.getMessage()
                 .contains("Email already in use"));
