@@ -28,6 +28,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -168,5 +169,35 @@ class AuthServiceTest {
 
         assertTrue(exception.getMessage()
                 .contains("Passwords do not match"));
+    }
+
+    @Test
+    void shouldReturnTrue_WhenTokenIsValid() {
+        when(tokenUtils.extractTokenFromHeader(anyString())).thenReturn(FAKE_JWT_TOKEN);
+        when(tokenUtils.validateToken(any())).thenReturn(true);
+        assertTrue(authService.verifyToken(FAKE_JWT_TOKEN));
+    }
+
+    @Test
+    void shouldReturnFalse_WhenTokenIsInvalid() {
+        when(tokenUtils.extractTokenFromHeader(anyString())).thenReturn(FAKE_JWT_TOKEN);
+        when(tokenUtils.validateToken(any())).thenReturn(false);
+        assertFalse(authService.verifyToken(FAKE_JWT_TOKEN));
+    }
+
+    @Test
+    void shouldReturnUser_WhenUserIsFoundWithEmail() {
+        when(authRepositoryPort.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        User foundUser = authService.getUserByEmail(user.getEmail());
+        assertNotNull(foundUser);
+    }
+
+    @Test
+    void shouldThrowBadRequestException_WhenUserNotFoundWithEmail() {
+        when(authRepositoryPort.findByEmail(user.getEmail())).thenReturn(Optional.empty());
+        BadRequestException exception = assertThrows(BadRequestException.class,
+                () -> authService.getUserByEmail(user.getEmail()));
+        assertTrue(exception.getMessage()
+                .contains("User not found"));
     }
 }
