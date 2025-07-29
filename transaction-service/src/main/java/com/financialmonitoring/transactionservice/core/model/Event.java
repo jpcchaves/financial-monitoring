@@ -2,20 +2,23 @@ package com.financialmonitoring.transactionservice.core.model;
 
 import com.financialmonitoring.commonlib.dto.HistoryDTO;
 import com.financialmonitoring.commonlib.enums.SagaStatus;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class Event implements Serializable {
 
-    @Serial private static final long serialVersionUID = -5906042640604343912L;
+    @Serial
+    private static final long serialVersionUID = -5906042640604343912L;
 
-    @Id private String id;
+    @Id
+    private String id;
     private String eventId;
     private String transactionId;
     private String transactionToken;
@@ -25,12 +28,14 @@ public class Event implements Serializable {
     private List<HistoryDTO> eventHistory;
     private LocalDateTime createdAt;
 
-    public Event() {}
+    public Event() {
+    }
 
     private Event(Builder builder) {
         this.id = builder.id;
         this.eventId = builder.eventId;
         this.transactionId = builder.transactionId;
+        this.transactionToken = builder.transactionToken;
         this.source = builder.source;
         this.sagaStatus = builder.sagaStatus;
         this.payload = builder.payload;
@@ -70,9 +75,8 @@ public class Event implements Serializable {
         return transactionToken;
     }
 
-    public Event setTransactionToken(String transactionToken) {
+    public void setTransactionToken(String transactionToken) {
         this.transactionToken = transactionToken;
-        return this;
     }
 
     public String getSource() {

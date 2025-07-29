@@ -8,19 +8,20 @@ import com.financialmonitoring.transactionservice.core.producer.KafkaProducer;
 import com.financialmonitoring.transactionservice.core.repository.TransactionRepository;
 import com.financialmonitoring.transactionservice.core.utils.JsonUtils;
 import com.financialmonitoring.transactionservice.core.utils.MapperUtils;
-import java.nio.ByteBuffer;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.security.SecureRandom;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 public class TransactionService {
 
     private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
+    private static final SecureRandom secureRandom = new SecureRandom();
 
     private final TransactionRepository transactionRepository;
     private final KafkaProducer kafkaProducer;
@@ -52,29 +53,25 @@ public class TransactionService {
     }
 
     public TransactionTokenDTO generateTransactionToken() {
-        UUID uuid = UUID.randomUUID();
-        ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
-        bb.putLong(uuid.getMostSignificantBits());
-        bb.putLong(uuid.getLeastSignificantBits());
         return new TransactionTokenDTO(
-                Base64.getUrlEncoder()
-                        .withoutPadding()
-                        .encodeToString(bb.array()));
+                UUID.randomUUID().toString().toUpperCase().replace("-", ""));
     }
 
     private Event mapEvent(Transaction transaction) {
-        return Event.builder()
+        Event event = Event.builder()
                 .eventId(transaction.getTransactionEventId())
                 .transactionId(transaction.getId())
                 .transactionToken(transaction.getTransactionToken())
                 .payload(jsonUtils.toJson(transaction))
                 .createdAt(LocalDateTime.now())
                 .build();
+
+        return event;
     }
 
     private String generateTransactionEventId() {
         return Instant.now()
-                        .toEpochMilli()
+                .toEpochMilli()
                 + "_"
                 + UUID.randomUUID();
     }
