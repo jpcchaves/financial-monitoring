@@ -2,7 +2,7 @@ package com.financialmonitoring.transactionservice.adapter.input.rest;
 
 import com.financialmonitoring.transactionservice.adapter.input.rest.dto.TransactionRequestDTO;
 import com.financialmonitoring.transactionservice.adapter.input.rest.dto.TransactionTokenDTO;
-import com.financialmonitoring.transactionservice.core.service.TransactionService;
+import com.financialmonitoring.transactionservice.domain.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
