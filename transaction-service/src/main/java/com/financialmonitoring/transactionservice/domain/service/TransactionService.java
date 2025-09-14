@@ -7,8 +7,8 @@ import com.financialmonitoring.transactionservice.infra.model.Transaction;
 import com.financialmonitoring.transactionservice.port.input.TransactionUseCases;
 import com.financialmonitoring.transactionservice.port.output.KafkaProducerPort;
 import com.financialmonitoring.transactionservice.port.output.TransactionRepositoryPort;
-import com.financialmonitoring.transactionservice.domain.utils.JsonUtils;
-import com.financialmonitoring.transactionservice.domain.utils.MapperUtils;
+import com.financialmonitoring.transactionservice.utils.JsonUtils;
+import com.financialmonitoring.transactionservice.utils.MapperUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

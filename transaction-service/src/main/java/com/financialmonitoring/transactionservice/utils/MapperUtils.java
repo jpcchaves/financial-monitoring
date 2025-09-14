@@ -1,4 +1,4 @@
-package com.financialmonitoring.transactionservice.domain.utils;
+package com.financialmonitoring.transactionservice.utils;
 
 import java.util.List;
 import org.modelmapper.ModelMapper;
