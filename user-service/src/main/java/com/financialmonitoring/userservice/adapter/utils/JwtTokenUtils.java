@@ -1,7 +1,8 @@
 package com.financialmonitoring.userservice.adapter.utils;
 
 import com.financialmonitoring.userservice.adapter.dto.UserLoginResponseDTO;
-import com.financialmonitoring.userservice.adapter.out.entity.User;
+import com.financialmonitoring.userservice.infra.model.User;
+import com.financialmonitoring.userservice.domain.utils.TokenUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -19,10 +20,11 @@ import java.util.Date;
 import java.util.Map;
 
 @Component
-public class TokenUtils {
-    private static final Logger logger = LoggerFactory.getLogger(TokenUtils.class);
+public class JwtTokenUtils implements TokenUtils {
+    private static final Logger logger = LoggerFactory.getLogger(JwtTokenUtils.class);
 
     private static final String AUTHORITIES_CLAIM_KEY = "authorities";
+    private static final String BEARER_PREFIX = "Bearer ";
     private static final String USER_CLAIM_KEY = "user";
 
     @Value("${jwt.secret}")
@@ -31,29 +33,46 @@ public class TokenUtils {
     @Value("${jwt.expiration-time}")
     private String expirationTime;
 
+    @Override
     public String generateToken(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
 
-        Instant issuedAtInstant = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+        Instant issuedAtInstant = Instant.now()
+                .truncatedTo(ChronoUnit.MILLIS);
         Instant expirationInstant = issuedAtInstant.plus(Long.parseLong(expirationTime), ChronoUnit.MILLIS);
 
-        return Jwts.builder().subject(user.getEmail()).issuedAt(Date.from(issuedAtInstant)).expiration(
-                Date.from(expirationInstant)).signWith(generateKey()).claims(getClaims(user, authentication)).compact();
+        return Jwts.builder()
+                .subject(user.getEmail())
+                .issuedAt(Date.from(issuedAtInstant))
+                .expiration(Date.from(expirationInstant))
+                .signWith(generateKey())
+                .claims(getClaims(user, authentication))
+                .compact();
     }
 
+    @Override
     public boolean isTokenValid(String token) {
         return StringUtils.hasText(token) && this.validateToken(token);
     }
 
+    @Override
     public String getTokenSubject(String token) {
-        Claims claims = Jwts.parser().verifyWith(generateKey()).build().parseSignedClaims(token).getPayload();
+        Claims claims = Jwts.parser()
+                .verifyWith(generateKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
 
         return claims.getSubject();
     }
 
+    @Override
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().verifyWith(generateKey()).build().parse(token);
+            Jwts.parser()
+                    .verifyWith(generateKey())
+                    .build()
+                    .parse(token);
             return true;
         } catch (Exception ex) {
             logger.error("Invalid token!: {}", ex.getMessage(), ex);
@@ -61,7 +80,24 @@ public class TokenUtils {
         }
     }
 
-    private Map<String, ?> getClaims(User user, Authentication authentication) {
+    @Override
+    public String getTokenFromRequest(String authHeader) {
+        return extractTokenFromHeader(authHeader);
+    }
+
+    @Override
+    public String extractTokenFromHeader(String authHeader) {
+        if (hasBearerToken(authHeader)) {
+            return authHeader.replace(BEARER_PREFIX, "");
+        }
+
+        return null;
+    }
+
+    private Map<String, ?> getClaims(
+            User user,
+            Authentication authentication
+    ) {
         return Map.of(USER_CLAIM_KEY, getUserClaimValue(user), AUTHORITIES_CLAIM_KEY, authentication.getAuthorities());
     }
 
@@ -71,5 +107,9 @@ public class TokenUtils {
 
     private SecretKey generateKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
+    }
+
+    private boolean hasBearerToken(String authHeader) {
+        return StringUtils.hasText(authHeader) && authHeader.startsWith(BEARER_PREFIX);
     }
 }

@@ -4,13 +4,13 @@ import com.financialmonitoring.userservice.adapter.dto.LoginRequestDTO;
 import com.financialmonitoring.userservice.adapter.dto.LoginResponseDTO;
 import com.financialmonitoring.userservice.adapter.dto.RegisterRequestDTO;
 import com.financialmonitoring.userservice.adapter.dto.RegisterResponseDTO;
-import com.financialmonitoring.userservice.adapter.out.entity.Role;
-import com.financialmonitoring.userservice.adapter.out.entity.User;
-import com.financialmonitoring.userservice.adapter.utils.TokenUtils;
+import com.financialmonitoring.userservice.infra.model.Role;
+import com.financialmonitoring.userservice.infra.model.User;
 import com.financialmonitoring.userservice.config.exception.BadRequestException;
-import com.financialmonitoring.userservice.domain.port.factory.UserFactory;
-import com.financialmonitoring.userservice.domain.port.out.AuthRepositoryPort;
-import com.financialmonitoring.userservice.domain.port.out.RoleRepositoryPort;
+import com.financialmonitoring.userservice.adapter.factory.UserFactory;
+import com.financialmonitoring.userservice.port.output.AuthRepositoryPort;
+import com.financialmonitoring.userservice.port.output.RoleRepositoryPort;
+import com.financialmonitoring.userservice.domain.utils.TokenUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +28,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -126,9 +127,9 @@ class AuthServiceTest {
         registerRequestDTO.setConfirmPassword(RAW_PASSWORD);
 
         when(authRepositoryPort.existsByEmail(user.getEmail())).thenReturn(false);
-        when(authRepositoryPort.save(any(User.class))).thenReturn(user);
-        when(roleRepositoryPort.getOrCreateDefaultRole()).thenReturn(roleTest);
         when(userFactory.createUserFromDto(registerRequestDTO, Set.of(roleTest))).thenReturn(user);
+        when(authRepositoryPort.save(user)).thenReturn(user);
+        when(roleRepositoryPort.getOrCreateDefaultRole()).thenReturn(roleTest);
 
         RegisterResponseDTO response = authService.register(registerRequestDTO);
 
@@ -136,11 +137,19 @@ class AuthServiceTest {
         assertEquals(user.getEmail(), response.getEmail());
     }
 
+    // This test takes a little bit longer to execute because authService.register uses passwordEncoder
+    // which uses Bcrypt implementation. To encode passwords, it takes 1000ms more or less
     @Test
     void shouldThrowException_WhenUserAlreadyExistsWithEmail() {
+        RegisterRequestDTO registerRequestDTO = new RegisterRequestDTO();
+        registerRequestDTO.setEmail(user.getEmail());
+        registerRequestDTO.setPassword(RAW_PASSWORD);
+        registerRequestDTO.setConfirmPassword(RAW_PASSWORD);
+
         when(authRepositoryPort.existsByEmail(user.getEmail())).thenReturn(true);
 
-        BadRequestException exception = assertThrows(BadRequestException.class, () -> authService.register(any()));
+        BadRequestException exception = assertThrows(BadRequestException.class,
+                () -> authService.register(registerRequestDTO));
 
         assertTrue(exception.getMessage()
                 .contains("Email already in use"));
@@ -160,5 +169,35 @@ class AuthServiceTest {
 
         assertTrue(exception.getMessage()
                 .contains("Passwords do not match"));
+    }
+
+    @Test
+    void shouldReturnTrue_WhenTokenIsValid() {
+        when(tokenUtils.extractTokenFromHeader(anyString())).thenReturn(FAKE_JWT_TOKEN);
+        when(tokenUtils.validateToken(any())).thenReturn(true);
+        assertTrue(authService.verifyToken(FAKE_JWT_TOKEN));
+    }
+
+    @Test
+    void shouldReturnFalse_WhenTokenIsInvalid() {
+        when(tokenUtils.extractTokenFromHeader(anyString())).thenReturn(FAKE_JWT_TOKEN);
+        when(tokenUtils.validateToken(any())).thenReturn(false);
+        assertFalse(authService.verifyToken(FAKE_JWT_TOKEN));
+    }
+
+    @Test
+    void shouldReturnUser_WhenUserIsFoundWithEmail() {
+        when(authRepositoryPort.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        User foundUser = authService.getUserByEmail(user.getEmail());
+        assertNotNull(foundUser);
+    }
+
+    @Test
+    void shouldThrowBadRequestException_WhenUserNotFoundWithEmail() {
+        when(authRepositoryPort.findByEmail(user.getEmail())).thenReturn(Optional.empty());
+        BadRequestException exception = assertThrows(BadRequestException.class,
+                () -> authService.getUserByEmail(user.getEmail()));
+        assertTrue(exception.getMessage()
+                .contains("User not found"));
     }
 }

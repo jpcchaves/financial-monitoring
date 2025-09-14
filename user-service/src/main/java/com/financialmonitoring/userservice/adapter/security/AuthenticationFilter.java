@@ -1,13 +1,13 @@
 package com.financialmonitoring.userservice.adapter.security;
 
-import com.financialmonitoring.userservice.adapter.utils.JwtUtils;
-import com.financialmonitoring.userservice.adapter.utils.TokenUtils;
+import com.financialmonitoring.userservice.adapter.utils.JwtTokenUtils;
 import com.financialmonitoring.userservice.domain.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,23 +19,28 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class AuthenticationFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
 
-    private final TokenUtils tokenUtils;
     private final UserService authService;
-    private final JwtUtils jwtUtils;
+    private final JwtTokenUtils jwtTokenUtils;
 
-    public AuthenticationFilter(TokenUtils tokenUtils, UserService userService, JwtUtils jwtUtils) {
-        this.tokenUtils = tokenUtils;
-        this.authService = userService;
-        this.jwtUtils = jwtUtils;
+    public AuthenticationFilter(
+            UserService authService,
+            JwtTokenUtils jwtTokenUtils
+    ) {
+        this.authService = authService;
+        this.jwtTokenUtils = jwtTokenUtils;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain
+    ) {
         try {
-            String token = jwtUtils.getTokenFromRequest(request);
+            String token = jwtTokenUtils.getTokenFromRequest(request.getHeader(HttpHeaders.AUTHORIZATION));
 
-            if (tokenUtils.isTokenValid(token)) {
-                String tokenSubject = tokenUtils.getTokenSubject(token);
+            if (jwtTokenUtils.isTokenValid(token)) {
+                String tokenSubject = jwtTokenUtils.getTokenSubject(token);
 
                 UserDetails userDetails = authService.loadUserByUsername(tokenSubject);
 
@@ -44,7 +49,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                SecurityContextHolder.getContext()
+                        .setAuthentication(authenticationToken);
             }
 
             filterChain.doFilter(request, response);

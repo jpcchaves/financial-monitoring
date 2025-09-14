@@ -82,9 +82,8 @@ public class Transaction implements Serializable {
         return transactionToken;
     }
 
-    public Transaction setTransactionToken(String transactionToken) {
+    public void setTransactionToken(String transactionToken) {
         this.transactionToken = transactionToken;
-        return this;
     }
 
     public BigDecimal getAmount() {

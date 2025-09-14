@@ -1,7 +1,7 @@
-package com.financialmonitoring.userservice.domain.port.out;
+package com.financialmonitoring.userservice.port.output;
 
 
-import com.financialmonitoring.userservice.adapter.out.entity.Role;
+import com.financialmonitoring.userservice.infra.model.Role;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;

@@ -2,6 +2,7 @@ package com.financialmonitoring.commonlib.dto;
 
 import com.financialmonitoring.commonlib.enums.EventSource;
 import com.financialmonitoring.commonlib.enums.SagaStatus;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ public class EventDTO implements Serializable {
 
     private String id;
     private String eventId;
+    private String transactionToken;
     private String transactionId;
     private EventSource source;
     private SagaStatus status;
@@ -28,6 +30,7 @@ public class EventDTO implements Serializable {
     public EventDTO(Builder builder) {
         this.id = builder.id;
         this.eventId = builder.eventId;
+        this.transactionToken = builder.transactionToken;
         this.transactionId = builder.transactionId;
         this.source = builder.source;
         this.status = builder.status;
@@ -37,12 +40,12 @@ public class EventDTO implements Serializable {
     }
 
     public EventDTO(String id,
-            String eventId,
-            EventSource source,
-            SagaStatus status,
-            Object payload,
-            List<HistoryDTO> eventHistory,
-            LocalDateTime createdAt) {
+                    String eventId,
+                    EventSource source,
+                    SagaStatus status,
+                    Object payload,
+                    List<HistoryDTO> eventHistory,
+                    LocalDateTime createdAt) {
         this.id = id;
         this.eventId = eventId;
         this.source = source;
@@ -77,6 +80,14 @@ public class EventDTO implements Serializable {
 
     public void setEventId(String eventId) {
         this.eventId = eventId;
+    }
+
+    public String getTransactionToken() {
+        return transactionToken;
+    }
+
+    public void setTransactionToken(String transactionToken) {
+        this.transactionToken = transactionToken;
     }
 
     public String getTransactionId() {
@@ -133,6 +144,7 @@ public class EventDTO implements Serializable {
         private String id;
         private String eventId;
         private String transactionId;
+        private String transactionToken;
         private EventSource source;
         private SagaStatus status;
         private Object payload;
@@ -146,6 +158,11 @@ public class EventDTO implements Serializable {
 
         public Builder eventId(String eventId) {
             this.eventId = eventId;
+            return this;
+        }
+
+        public Builder setTransactionToken(String transactionToken) {
+            this.transactionToken = transactionToken;
             return this;
         }
 

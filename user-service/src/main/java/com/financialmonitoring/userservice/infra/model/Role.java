@@ -1,4 +1,4 @@
-package com.financialmonitoring.userservice.adapter.out.entity;
+package com.financialmonitoring.userservice.infra.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

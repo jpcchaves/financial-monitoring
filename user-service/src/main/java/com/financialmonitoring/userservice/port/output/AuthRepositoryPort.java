@@ -1,6 +1,6 @@
-package com.financialmonitoring.userservice.domain.port.out;
+package com.financialmonitoring.userservice.port.output;
 
-import com.financialmonitoring.userservice.adapter.out.entity.User;
+import com.financialmonitoring.userservice.infra.model.User;
 
 import java.util.Optional;
 

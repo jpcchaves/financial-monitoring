@@ -1,12 +1,12 @@
-package com.financialmonitoring.userservice.adapter.in.rest;
+package com.financialmonitoring.userservice.adapter.input.rest;
 
 import com.financialmonitoring.userservice.adapter.dto.LoginRequestDTO;
 import com.financialmonitoring.userservice.adapter.dto.LoginResponseDTO;
 import com.financialmonitoring.userservice.adapter.dto.RegisterRequestDTO;
 import com.financialmonitoring.userservice.adapter.dto.RegisterResponseDTO;
-import com.financialmonitoring.userservice.domain.port.in.LoginUseCase;
-import com.financialmonitoring.userservice.domain.port.in.RegisterUserUseCase;
-import com.financialmonitoring.userservice.domain.port.in.VerifyTokenUseCase;
+import com.financialmonitoring.userservice.port.input.LoginUseCase;
+import com.financialmonitoring.userservice.port.input.RegisterUserUseCase;
+import com.financialmonitoring.userservice.port.input.VerifyTokenUseCase;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
