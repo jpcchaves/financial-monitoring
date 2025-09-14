@@ -1,4 +1,4 @@
-package com.financialmonitoring.userservice.domain.port.factory;
+package com.financialmonitoring.userservice.adapter.factory;
 
 import com.financialmonitoring.userservice.adapter.dto.RegisterRequestDTO;
 import com.financialmonitoring.userservice.infra.model.Role;

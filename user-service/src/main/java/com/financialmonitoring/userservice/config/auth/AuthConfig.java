@@ -1,8 +1,8 @@
 package com.financialmonitoring.userservice.config.auth;
 
-import com.financialmonitoring.userservice.domain.port.factory.UserFactory;
-import com.financialmonitoring.userservice.domain.port.out.AuthRepositoryPort;
-import com.financialmonitoring.userservice.domain.port.out.RoleRepositoryPort;
+import com.financialmonitoring.userservice.adapter.factory.UserFactory;
+import com.financialmonitoring.userservice.port.output.AuthRepositoryPort;
+import com.financialmonitoring.userservice.port.output.RoleRepositoryPort;
 import com.financialmonitoring.userservice.domain.service.AuthService;
 import com.financialmonitoring.userservice.domain.service.UserService;
 import com.financialmonitoring.userservice.domain.utils.TokenUtils;

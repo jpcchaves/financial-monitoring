@@ -1,4 +1,4 @@
-package com.financialmonitoring.userservice.domain.port.out;
+package com.financialmonitoring.userservice.port.output;
 
 
 import com.financialmonitoring.userservice.infra.model.Role;

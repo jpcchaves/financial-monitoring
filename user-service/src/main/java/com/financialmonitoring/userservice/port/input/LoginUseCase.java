@@ -1,4 +1,4 @@
-package com.financialmonitoring.userservice.domain.port.in;
+package com.financialmonitoring.userservice.port.input;
 
 import com.financialmonitoring.userservice.adapter.dto.LoginRequestDTO;
 import com.financialmonitoring.userservice.adapter.dto.LoginResponseDTO;

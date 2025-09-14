@@ -1,7 +1,7 @@
-package com.financialmonitoring.userservice.adapter.out.repository;
+package com.financialmonitoring.userservice.adapter.output.repository;
 
 import com.financialmonitoring.userservice.infra.model.Role;
-import com.financialmonitoring.userservice.domain.port.out.RoleRepositoryPort;
+import com.financialmonitoring.userservice.port.output.RoleRepositoryPort;
 import com.financialmonitoring.userservice.infra.repository.jpa.SpringDataRoleRepository;
 import org.springframework.stereotype.Repository;
 

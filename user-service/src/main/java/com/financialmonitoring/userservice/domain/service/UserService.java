@@ -1,6 +1,6 @@
 package com.financialmonitoring.userservice.domain.service;
 
-import com.financialmonitoring.userservice.domain.port.out.AuthRepositoryPort;
+import com.financialmonitoring.userservice.port.output.AuthRepositoryPort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
