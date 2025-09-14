@@ -3,7 +3,6 @@ package com.financialmonitoring.apigateway.filters;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financialmonitoring.commonlib.dto.ExceptionResponseDTO;
-import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +16,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
+
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Component
 public class JwtAuthGatewayFilter extends AbstractGatewayFilterFactory<JwtAuthGatewayFilter.Config> {
@@ -65,6 +69,7 @@ public class JwtAuthGatewayFilter extends AbstractGatewayFilterFactory<JwtAuthGa
                     .retrieve()
                     .toBodilessEntity()
                     .flatMap(response -> chain.filter(exchange))
+                    .retryWhen(Retry.fixedDelay(3, Duration.of(2, ChronoUnit.SECONDS)))
                     .onErrorResume(
                             error -> {
                                 logger.error("Failed to verify token: {}", error.getMessage(), error);
