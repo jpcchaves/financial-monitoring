@@ -1,6 +1,6 @@
-package com.financialmonitoring.userservice.adapter.out.repository;
+package com.financialmonitoring.userservice.infra.repository.jpa;
 
-import com.financialmonitoring.userservice.adapter.out.entity.Role;
+import com.financialmonitoring.userservice.infra.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

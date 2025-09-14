@@ -1,7 +1,7 @@
 package com.financialmonitoring.userservice.adapter.utils;
 
 import com.financialmonitoring.userservice.adapter.dto.UserLoginResponseDTO;
-import com.financialmonitoring.userservice.adapter.out.entity.User;
+import com.financialmonitoring.userservice.infra.model.User;
 import com.financialmonitoring.userservice.domain.utils.TokenUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

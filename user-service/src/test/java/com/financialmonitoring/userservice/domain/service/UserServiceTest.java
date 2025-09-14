@@ -1,7 +1,7 @@
 package com.financialmonitoring.userservice.domain.service;
 
-import com.financialmonitoring.userservice.adapter.out.entity.Role;
-import com.financialmonitoring.userservice.adapter.out.entity.User;
+import com.financialmonitoring.userservice.infra.model.Role;
+import com.financialmonitoring.userservice.infra.model.User;
 import com.financialmonitoring.userservice.domain.port.out.AuthRepositoryPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

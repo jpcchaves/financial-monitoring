@@ -1,8 +1,8 @@
-package com.financialmonitoring.userservice.adapter.out;
+package com.financialmonitoring.userservice.adapter.out.repository;
 
-import com.financialmonitoring.userservice.adapter.out.repository.SpringDataUserRepository;
-import com.financialmonitoring.userservice.adapter.out.entity.User;
+import com.financialmonitoring.userservice.infra.model.User;
 import com.financialmonitoring.userservice.domain.port.out.AuthRepositoryPort;
+import com.financialmonitoring.userservice.infra.repository.jpa.SpringDataUserRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

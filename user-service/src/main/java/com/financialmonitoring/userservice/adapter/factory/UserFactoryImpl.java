@@ -1,8 +1,8 @@
 package com.financialmonitoring.userservice.adapter.factory;
 
 import com.financialmonitoring.userservice.adapter.dto.RegisterRequestDTO;
-import com.financialmonitoring.userservice.adapter.out.entity.Role;
-import com.financialmonitoring.userservice.adapter.out.entity.User;
+import com.financialmonitoring.userservice.infra.model.Role;
+import com.financialmonitoring.userservice.infra.model.User;
 import com.financialmonitoring.userservice.domain.port.factory.UserFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
