@@ -2,13 +2,13 @@ package com.financialmonitoring.transactionservice.domain.service;
 
 import com.financialmonitoring.transactionservice.adapter.input.rest.dto.TransactionRequestDTO;
 import com.financialmonitoring.transactionservice.adapter.input.rest.dto.TransactionTokenDTO;
-import com.financialmonitoring.transactionservice.core.producer.KafkaProducer;
-import com.financialmonitoring.transactionservice.core.utils.JsonUtils;
-import com.financialmonitoring.transactionservice.core.utils.MapperUtils;
 import com.financialmonitoring.transactionservice.infra.model.Event;
 import com.financialmonitoring.transactionservice.infra.model.Transaction;
 import com.financialmonitoring.transactionservice.port.input.TransactionUseCases;
+import com.financialmonitoring.transactionservice.port.output.KafkaProducerPort;
 import com.financialmonitoring.transactionservice.port.output.TransactionRepositoryPort;
+import com.financialmonitoring.transactionservice.domain.utils.JsonUtils;
+import com.financialmonitoring.transactionservice.domain.utils.MapperUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,12 +21,12 @@ public class TransactionService implements TransactionUseCases {
     private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
 
     private final TransactionRepositoryPort transactionJpaRepository;
-    private final KafkaProducer kafkaProducer;
+    private final KafkaProducerPort kafkaProducer;
     private final MapperUtils mapper;
     private final JsonUtils jsonUtils;
 
     public TransactionService(TransactionRepositoryPort transactionJpaRepository,
-                              KafkaProducer kafkaProducer, MapperUtils mapper,
+                              KafkaProducerPort kafkaProducer, MapperUtils mapper,
                               JsonUtils jsonUtils) {
         this.transactionJpaRepository = transactionJpaRepository;
         this.kafkaProducer = kafkaProducer;

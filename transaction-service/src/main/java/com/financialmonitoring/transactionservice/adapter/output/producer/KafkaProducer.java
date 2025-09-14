@@ -1,5 +1,6 @@
-package com.financialmonitoring.transactionservice.core.producer;
+package com.financialmonitoring.transactionservice.adapter.output.producer;
 
+import com.financialmonitoring.transactionservice.port.output.KafkaProducerPort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,7 +8,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class KafkaProducer {
+public class KafkaProducer implements KafkaProducerPort {
     private static final Logger logger = LoggerFactory.getLogger(KafkaProducer.class);
 
     private final KafkaTemplate<String, String> kafkaTemplate;

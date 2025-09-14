@@ -1,4 +1,4 @@
-package com.financialmonitoring.transactionservice.core.utils;
+package com.financialmonitoring.transactionservice.domain.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.financialmonitoring.transactionservice.infra.model.Event;

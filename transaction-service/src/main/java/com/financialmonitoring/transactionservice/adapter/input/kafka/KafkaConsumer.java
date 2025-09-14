@@ -1,7 +1,7 @@
 package com.financialmonitoring.transactionservice.adapter.input.kafka;
 
-import com.financialmonitoring.transactionservice.core.service.EventService;
-import com.financialmonitoring.transactionservice.core.utils.JsonUtils;
+import com.financialmonitoring.transactionservice.domain.service.EventService;
+import com.financialmonitoring.transactionservice.domain.utils.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;

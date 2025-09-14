@@ -1,10 +1,10 @@
 package com.financialmonitoring.transactionservice.config.transaction;
 
-import com.financialmonitoring.transactionservice.core.producer.KafkaProducer;
-import com.financialmonitoring.transactionservice.core.utils.JsonUtils;
-import com.financialmonitoring.transactionservice.core.utils.MapperUtils;
 import com.financialmonitoring.transactionservice.domain.service.TransactionService;
+import com.financialmonitoring.transactionservice.port.output.KafkaProducerPort;
 import com.financialmonitoring.transactionservice.port.output.TransactionRepositoryPort;
+import com.financialmonitoring.transactionservice.domain.utils.JsonUtils;
+import com.financialmonitoring.transactionservice.domain.utils.MapperUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,8 +14,9 @@ public class TransactionServiceConfig {
     @Bean
     public TransactionService transactionService(
             TransactionRepositoryPort transactionRepositoryPort,
-            KafkaProducer kafkaProducer,
-            MapperUtils mapperUtils, JsonUtils jsonUtils) {
+            KafkaProducerPort kafkaProducer,
+            MapperUtils mapperUtils,
+            JsonUtils jsonUtils) {
         return new TransactionService(transactionRepositoryPort, kafkaProducer, mapperUtils, jsonUtils);
     }
 }
