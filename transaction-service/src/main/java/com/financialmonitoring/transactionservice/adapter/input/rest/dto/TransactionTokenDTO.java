@@ -1,4 +1,4 @@
-package com.financialmonitoring.transactionservice.core.dto;
+package com.financialmonitoring.transactionservice.adapter.input.rest.dto;
 
 import java.io.Serial;
 import java.io.Serializable;

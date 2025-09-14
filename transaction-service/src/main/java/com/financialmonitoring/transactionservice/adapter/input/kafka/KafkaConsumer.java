@@ -1,4 +1,4 @@
-package com.financialmonitoring.transactionservice.core.consumer;
+package com.financialmonitoring.transactionservice.adapter.input.kafka;
 
 import com.financialmonitoring.transactionservice.core.service.EventService;
 import com.financialmonitoring.transactionservice.core.utils.JsonUtils;

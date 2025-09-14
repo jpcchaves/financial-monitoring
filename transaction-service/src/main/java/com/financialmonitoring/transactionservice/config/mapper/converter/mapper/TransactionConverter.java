@@ -1,13 +1,13 @@
-package com.financialmonitoring.transactionservice.config.mapper.custom;
+package com.financialmonitoring.transactionservice.config.mapper.converter.mapper;
 
-import com.financialmonitoring.transactionservice.core.dto.TransactionRequestDTO;
-import com.financialmonitoring.transactionservice.core.model.Transaction;
+import com.financialmonitoring.transactionservice.adapter.input.rest.dto.TransactionRequestDTO;
+import com.financialmonitoring.transactionservice.infra.model.Transaction;
 import org.modelmapper.Converter;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class TransactionMapper implements Converter<TransactionRequestDTO, Transaction> {
+public class TransactionConverter implements Converter<TransactionRequestDTO, Transaction> {
 
     @Override
     public Transaction convert(MappingContext<TransactionRequestDTO, Transaction> mappingContext) {

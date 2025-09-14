@@ -1,4 +1,4 @@
-package com.financialmonitoring.transactionservice.core.dto;
+package com.financialmonitoring.transactionservice.adapter.input.rest.dto;
 
 import com.financialmonitoring.commonlib.enums.TransactionType;
 import jakarta.validation.constraints.NotBlank;

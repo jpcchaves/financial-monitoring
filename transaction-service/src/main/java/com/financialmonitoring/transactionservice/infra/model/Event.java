@@ -1,4 +1,4 @@
-package com.financialmonitoring.transactionservice.core.model;
+package com.financialmonitoring.transactionservice.infra.model;
 
 import com.financialmonitoring.commonlib.dto.HistoryDTO;
 import com.financialmonitoring.commonlib.enums.SagaStatus;

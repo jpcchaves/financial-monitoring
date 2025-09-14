@@ -1,11 +1,11 @@
 package com.financialmonitoring.transactionservice.core.service;
 
-import com.financialmonitoring.transactionservice.core.dto.TransactionRequestDTO;
-import com.financialmonitoring.transactionservice.core.dto.TransactionTokenDTO;
-import com.financialmonitoring.transactionservice.core.model.Event;
-import com.financialmonitoring.transactionservice.core.model.Transaction;
+import com.financialmonitoring.transactionservice.adapter.input.rest.dto.TransactionRequestDTO;
+import com.financialmonitoring.transactionservice.adapter.input.rest.dto.TransactionTokenDTO;
+import com.financialmonitoring.transactionservice.infra.model.Event;
+import com.financialmonitoring.transactionservice.infra.model.Transaction;
 import com.financialmonitoring.transactionservice.core.producer.KafkaProducer;
-import com.financialmonitoring.transactionservice.core.repository.TransactionRepository;
+import com.financialmonitoring.transactionservice.infra.repository.jpa.TransactionJpaRepository;
 import com.financialmonitoring.transactionservice.core.utils.JsonUtils;
 import com.financialmonitoring.transactionservice.core.utils.MapperUtils;
 import org.slf4j.Logger;
@@ -23,17 +23,17 @@ public class TransactionService {
     private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
     private static final SecureRandom secureRandom = new SecureRandom();
 
-    private final TransactionRepository transactionRepository;
+    private final TransactionJpaRepository transactionJpaRepository;
     private final KafkaProducer kafkaProducer;
     private final MapperUtils mapper;
     private final JsonUtils jsonUtils;
 
     public TransactionService(
-            TransactionRepository transactionRepository,
+            TransactionJpaRepository transactionJpaRepository,
             KafkaProducer kafkaProducer,
             MapperUtils mapper,
             JsonUtils jsonUtils) {
-        this.transactionRepository = transactionRepository;
+        this.transactionJpaRepository = transactionJpaRepository;
         this.kafkaProducer = kafkaProducer;
         this.mapper = mapper;
         this.jsonUtils = jsonUtils;
@@ -47,7 +47,7 @@ public class TransactionService {
         transaction.setAmount(requestDTO.getAmount());
         transaction.setTransactionType(requestDTO.getTransactionType());
         transaction.setUserId(requestDTO.getUserId());
-        transaction = transactionRepository.save(transaction);
+        transaction = transactionJpaRepository.save(transaction);
         kafkaProducer.sendEvent(jsonUtils.toJson(mapEvent(transaction)));
         return mapper.map(transaction, TransactionRequestDTO.class);
     }

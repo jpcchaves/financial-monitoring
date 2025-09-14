@@ -1,7 +1,7 @@
 package com.financialmonitoring.transactionservice.core.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.financialmonitoring.transactionservice.core.model.Event;
+import com.financialmonitoring.transactionservice.infra.model.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
