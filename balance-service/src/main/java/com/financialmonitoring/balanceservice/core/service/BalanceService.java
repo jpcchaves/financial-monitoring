@@ -14,8 +14,11 @@ import com.financialmonitoring.commonlib.enums.EventSource;
 import com.financialmonitoring.commonlib.enums.SagaStatus;
 import com.financialmonitoring.commonlib.exceptions.ResourceNotFoundException;
 import com.financialmonitoring.commonlib.exceptions.ValidationException;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -31,9 +34,9 @@ public class BalanceService {
     private final JsonUtils jsonUtils;
 
     public BalanceService(BalanceRepository balanceRepository,
-            BalanceCheckLogRepository logRepository,
-            KafkaProducer kafkaProducer,
-            JsonUtils jsonUtils) {
+                          BalanceCheckLogRepository logRepository,
+                          KafkaProducer kafkaProducer,
+                          JsonUtils jsonUtils) {
         this.balanceRepository = balanceRepository;
         this.logRepository = logRepository;
         this.kafkaProducer = kafkaProducer;
@@ -54,8 +57,7 @@ public class BalanceService {
             Balance receiverBalance = getUserBalance(transactionDto.getReceiverId());
 
             // Save log
-            createAndSaveBalanceCheckLog(event, senderBalance, transactionDto);
-            createAndSaveBalanceCheckLog(event, receiverBalance, transactionDto);
+            createAndSaveBalanceCheckLog(event, List.of(senderBalance, receiverBalance), transactionDto);
 
             // Subtract sender balance or throw exception if balance is not enough
             subtractBalance(senderBalance, transactionDto);
@@ -74,7 +76,7 @@ public class BalanceService {
     }
 
     private void validateSenderBalanceIsEnough(BigDecimal currentSenderBalance,
-            BigDecimal transactionAmount) {
+                                               BigDecimal transactionAmount) {
         if (currentSenderBalance.doubleValue() <= BigDecimal.ZERO.doubleValue()) {
             throw new ValidationException("You cannot perform this transaction because you don't have enough balance!");
         }
@@ -103,28 +105,34 @@ public class BalanceService {
     }
 
     private void createAndSaveBalanceCheckLog(EventDTO event,
-            Balance balance,
-            TransactionDTO transactionDTO) {
-        logRepository.save(
-                BalanceCheckLog.builder()
-                        .eventId(event.getEventId())
-                        .transactionId(event.getTransactionId())
-                        .balance(balance)
-                        .previousValue(balance.getAmount())
-                        .transactionValue(transactionDTO.getAmount())
-                        .updatedValue(balance.getAmount().subtract(transactionDTO.getAmount()))
-                        .build()
+                                              List<Balance> balance,
+                                              TransactionDTO transactionDTO) {
+        logRepository.saveAll(balance.stream()
+                .map(b -> buildLog(event, transactionDTO, b))
+                .toList()
         );
     }
 
+    private static BalanceCheckLog buildLog(EventDTO event, TransactionDTO transactionDTO,
+                                            Balance b) {
+        return BalanceCheckLog.builder()
+                .eventId(event.getEventId())
+                .transactionId(event.getTransactionId())
+                .balance(b)
+                .previousValue(b.getAmount())
+                .transactionValue(transactionDTO.getAmount())
+                .updatedValue(b.getAmount().subtract(transactionDTO.getAmount()))
+                .build();
+    }
+
     private void subtractBalance(Balance balance,
-            TransactionDTO transactionDTO) {
+                                 TransactionDTO transactionDTO) {
         balance.setAmount(balance.getAmount().subtract(transactionDTO.getAmount()));
         balanceRepository.save(balance);
     }
 
     private void increaseBalance(Balance balance,
-            TransactionDTO transactionDTO) {
+                                 TransactionDTO transactionDTO) {
         BigDecimal updatedValue = balance.getAmount().subtract(transactionDTO.getAmount());
 
         if (updatedValue.doubleValue() <= BigDecimal.ZERO.doubleValue()) {
@@ -141,7 +149,7 @@ public class BalanceService {
     }
 
     private void addHistory(EventDTO event,
-            String message) {
+                            String message) {
         var history = HistoryDTO
                 .builder()
                 .source(event.getSource())
@@ -153,7 +161,7 @@ public class BalanceService {
     }
 
     private void handleBalanceCheckFail(EventDTO eventDTO,
-            String message) {
+                                        String message) {
         eventDTO.setStatus(SagaStatus.ROLLBACK_PENDING);
         eventDTO.setSource(EventSource.BALANCE_SERVICE);
         addHistory(eventDTO, "Fail to update balance: ".concat(message));
